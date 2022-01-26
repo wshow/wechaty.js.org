@@ -1,0 +1,1812 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="https://wechaty.js.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://wechaty.js.org/" rel="alternate" type="text/html" /><updated>2022-01-26T13:30:39+00:00</updated><id>https://wechaty.js.org/feed.xml</id><title type="html">Wechaty</title><subtitle>Conversational RPA SDK for Chatbot Makers</subtitle><entry><title type="html">2022-基于5G平台开发puppet模块接入wechaty</title><link href="https://wechaty.js.org/2022/01/18/monthly-wechaty-puppet-walnut-report/" rel="alternate" type="text/html" title="2022-基于5G平台开发puppet模块接入wechaty" /><published>2022-01-18T00:00:00+00:00</published><updated>2022-01-18T00:00:00+00:00</updated><id>https://wechaty.js.org/2022/01/18/monthly-wechaty-puppet-walnut-report</id><content type="html" xml:base="https://wechaty.js.org/2022/01/18/monthly-wechaty-puppet-walnut-report/"><![CDATA[<h2 id="基于-5g-平台开发-puppet-模块接入-wechaty">基于 5G 平台开发 puppet 模块接入 wechaty</h2>
+
+<ul>
+  <li>项目名称：基于5G消息的 Wechaty Puppet 模块的设计与实现</li>
+  <li>学生：鲍耀龙</li>
+  <li>导师：苏畅</li>
+  <li>项目介绍：<a href="https://github.com/juzibot/intern/issues/1">https://github.com/juzibot/intern/issues/1</a></li>
+  <li>代码地址：<a href="https://github.com/wechaty/puppet-walnut">https://github.com/wechaty/puppet-walnut</a></li>
+</ul>
+
+<h3 id="背景介绍">背景介绍</h3>
+
+<ul>
+  <li>Wechaty 社区目前已经支持微信、Whatsapp、企业微信、飞书等常见流行即时通讯工具，并且能够通过多语言 SDK （比如 Python Wechaty） 进行调用。</li>
+  <li><a href="https://wechaty.js.org/2021/03/27/rcs-messaging-chatbot/">5G Chatbot (RCS)</a> 是近期中国电信运营商基于 5G 的消息战略落地平台，未来的 5G 手机将会内置 RCS 消息的处理能力。</li>
+  <li><a href="https://www.5g-msg.com/#/">硬核桃社区</a> 的 <a href="https://wechaty.js.org/2021/03/27/rcs-messaging-chatbot/">电信运营商商5G Chatbot</a> 平台。</li>
+</ul>
+
+<h3 id="目标计划">目标计划</h3>
+
+<ul>
+  <li>基于 5G 平台的开放 api 进行封装，实现简单的<code class="language-plaintext highlighter-rouge">ding-dong-bot</code>。</li>
+  <li>丰富 5G 的消息模式，实现支持富文本、文件、css等多样消息格式的 puppet。</li>
+</ul>
+
+<h3 id="项目进展">项目进展</h3>
+
+<ul>
+  <li>完善 walnut 仓库的 README 和 getting-started。</li>
+  <li>完善对于 wechaty contact 和 message 部分 api 的支持。</li>
+</ul>
+
+<h3 id="contact-api-支持">Contact Api 支持</h3>
+
+<ul>
+  <li>
+    <h4 id="properties"><a href="https://wechaty.js.org/docs/api/contact#properties">Properties</a></h4>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Support</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>id</td>
+          <td><code class="language-plaintext highlighter-rouge">string</code></td>
+          <td>Get Contact id. This function is depending on the Puppet Implementation, see <a href="https://github.com/wechaty/wechaty/wiki/Puppet#3-puppet-compatible-table">puppet-compatible-table</a></td>
+          <td>✅</td>
+          <td>Phone number</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <h4 id="instance-methods"><a href="https://wechaty.js.org/docs/api/contact#instance-methods">Instance Methods</a></h4>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Instance Methods</th>
+          <th>Return type</th>
+          <th>Support</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>say(text Or Contact Or File)</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td>⚠Contact not Support</td>
+        </tr>
+        <tr>
+          <td>name()</td>
+          <td><code class="language-plaintext highlighter-rouge">String</code></td>
+          <td>✅</td>
+          <td>Phone number</td>
+        </tr>
+        <tr>
+          <td>alias(newAlias)</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>friend()</td>
+          <td><code class="language-plaintext highlighter-rouge">Boolean or null</code></td>
+          <td>✅</td>
+          <td>True</td>
+        </tr>
+        <tr>
+          <td>type()</td>
+          <td><code class="language-plaintext highlighter-rouge">ContactType.Unknown or ContactType.Personal or ContactType.Official</code></td>
+          <td>✅</td>
+          <td>ContactType.Personal</td>
+        </tr>
+        <tr>
+          <td>gender()</td>
+          <td><code class="language-plaintext highlighter-rouge">ContactGender.Unknown or ContactGender.Male or ContactGender.Female</code></td>
+          <td>✅</td>
+          <td>ContactGender.Unknown</td>
+        </tr>
+        <tr>
+          <td>province()</td>
+          <td><code class="language-plaintext highlighter-rouge">String or null</code></td>
+          <td>❌</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>city()</td>
+          <td><code class="language-plaintext highlighter-rouge">String or null</code></td>
+          <td>❌</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>avatar()</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td>Default avatar</td>
+        </tr>
+        <tr>
+          <td>sync()</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>self()</td>
+          <td><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <blockquote>
+      <p>Default avatar 👉 <a href="https://raw.githubusercontent.com/wechaty/puppet-walnut/main/docs/images/avatar.webp">https://raw.githubusercontent.com/wechaty/puppet-walnut/main/docs/images/avatar.webp</a></p>
+    </blockquote>
+  </li>
+  <li>
+    <h4 id="static-methods"><a href="https://wechaty.js.org/docs/api/contact#static-methods">Static Methods</a></h4>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Static Methods</th>
+          <th>Return Type</th>
+          <th>Support</th>
+          <th>Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>find(query)</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise &lt;Contact | null&gt;</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>findAll(Query Arguements)</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise &lt;Contact []&gt;</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h3 id="message-api-支持">Message Api 支持</h3>
+
+<ul>
+  <li>
+    <h4 id="instance-methods-1"><a href="https://wechaty.js.org/docs/api/message#instance-methods">Instance Methods</a></h4>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Instance methods</th>
+          <th>Return type</th>
+          <th>Support</th>
+          <th>Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>from()</td>
+          <td><code class="language-plaintext highlighter-rouge">Contact</code> or <code class="language-plaintext highlighter-rouge">null</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>to()</td>
+          <td><code class="language-plaintext highlighter-rouge">Contact</code> or <code class="language-plaintext highlighter-rouge">null</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>room()</td>
+          <td><code class="language-plaintext highlighter-rouge">Room</code> or <code class="language-plaintext highlighter-rouge">null</code></td>
+          <td>✅</td>
+          <td>null</td>
+        </tr>
+        <tr>
+          <td>text()</td>
+          <td><code class="language-plaintext highlighter-rouge">string</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>say(text Or Contact Or File)</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td>⚠Contact not Support</td>
+        </tr>
+        <tr>
+          <td>type()</td>
+          <td><code class="language-plaintext highlighter-rouge">MessageType</code></td>
+          <td>✅</td>
+          <td>Message.Text</td>
+        </tr>
+        <tr>
+          <td>self()</td>
+          <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>mention()</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>❌</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>mentionSelf()</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>❌</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>forward(to)</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>date()</td>
+          <td><code class="language-plaintext highlighter-rouge">Date</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>age()</td>
+          <td><code class="language-plaintext highlighter-rouge">Number</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>toFileBox()</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>toContact()</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>❌</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>toUrlLink()</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <h4 id="static-method"><a href="https://wechaty.js.org/docs/api/message#static-method">Static Method</a></h4>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Static Methods</th>
+          <th>Return type</th>
+          <th>Support</th>
+          <th>Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>find()</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+        <tr>
+          <td>findAll()</td>
+          <td><code class="language-plaintext highlighter-rouge">Promise</code></td>
+          <td>✅</td>
+          <td> </td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h3 id="视频展示">视频展示</h3>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+">
+  <iframe src="https://www.youtube.com/embed/K5CIaL6x83k" allowfullscreen="" webkitallowfullscreen="" frameborder="0" style="
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    ">
+</iframe>
+
+</div>
+
+<h3 id="答辩报告">答辩报告</h3>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+">
+  <iframe src="/assets/2022/01-monthly-wechaty-puppet-walnut-report/monthly-wechaty-puppet-walnut-report" allowfullscreen="" webkitallowfullscreen="" frameborder="0" style="
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    ">
+</iframe>
+
+</div>
+
+<h3 id="计划安排">计划安排</h3>
+
+<ul>
+  <li>完成图片和地理位置卡片消息的实现。</li>
+  <li>封装和抽象消息模块的数据结构。</li>
+  <li>优化项目结构，进行项目部署和稳定性测试。</li>
+</ul>
+
+<blockquote>
+  <p>Author: <a href="https://github.com/fabian4">@fabian</a></p>
+</blockquote>]]></content><author><name>fabian</name></author><category term="project" /><category term="5g" /><category term="puppet-walnut" /><category term="chatbot" /><category term="ecosystem" /><category term="plan" /><summary type="html"><![CDATA[基于 5G 平台开发 puppet 模块接入 wechaty]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2022/01-monthly-wechaty-puppet-walnut-report/puppet-walnut.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2022/01-monthly-wechaty-puppet-walnut-report/puppet-walnut.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">基于Wechaty的个人助理，++生活效率&amp;amp;&amp;amp;有效对抗内卷</title><link href="https://wechaty.js.org/2022/01/16/wechaty-assistant-bot-opensource/" rel="alternate" type="text/html" title="基于Wechaty的个人助理，++生活效率&amp;amp;&amp;amp;有效对抗内卷" /><published>2022-01-16T00:00:00+00:00</published><updated>2022-01-16T00:00:00+00:00</updated><id>https://wechaty.js.org/2022/01/16/wechaty-assistant-bot-opensource</id><content type="html" xml:base="https://wechaty.js.org/2022/01/16/wechaty-assistant-bot-opensource/"><![CDATA[<h2 id="项目地址">项目地址</h2>
+
+<p><a href="https://github.com/yzh1255245824/wechat-bot-padlocal">wechaty-assistant</a></p>
+
+<h2 id="一前言">一、前言</h2>
+
+<p>由于常年穿梭于诸多小众网盘的qq群，我接触到了社交软件机器人这个概念。初次接触，便觉得甚是有趣，因而在一番检索之后，寻访到了<code class="language-plaintext highlighter-rouge">wechaty</code>这一宝地。</p>
+
+<p>起初只是想做一个在微信群内和群友聊天水群的机器人，后来发现一些在酷安上费尽心机找到的宝藏软件的部分功能，可以简化移植到微信上，例如<code class="language-plaintext highlighter-rouge">密码键盘</code>这一功能。还有<code class="language-plaintext highlighter-rouge">定时消息</code>这种用处颇大的功能，此前只能提前编辑好消息，然后挑灯夜战、枕戈待旦，时机一到就手动点击发送，而现在借助<code class="language-plaintext highlighter-rouge">wechaty</code>，妈妈再也不用担心过年的时候12:00要发送的拜年请求过多、双十一也不必再纠结是先给女友发送恋爱纪念日快乐还是先去京东下单(太棒了！！)。</p>
+
+<p>本项目借助<code class="language-plaintext highlighter-rouge">padlocal</code>作为puppet-provider，集成了个人常用的API服务商接口，同时接入了<code class="language-plaintext highlighter-rouge">微信对话开放平台</code>，你可以利用内嵌的小功能替代平时在网页中使用的在线小工具，也可以在凌晨四点给卷王们发送“我还在学”，诸多功能可点击项目地址下方链接体验。</p>
+
+<p>再次特别致谢<code class="language-plaintext highlighter-rouge">wechaty</code>社区一众开发者们的辛勤付出，感谢你们的创造。</p>
+
+<h2 id="二主要功能">二、主要功能</h2>
+
+<h3 id="21-私聊消息处理关键词回复包括">2.1 私聊消息处理：关键词回复，包括</h3>
+
+<p><img src="/assets/2022/01-wechaty-assistant-bot-opensource/menu.webp" alt="people-message" /></p>
+
+<p>在线实时数据获取服务由API服务商提供</p>
+
+<p>毒鸡汤
+<img src="/assets/2022/01-wechaty-assistant-bot-opensource/poisonsoup.webp" alt="IMG_20220115_210015.jpg" /></p>
+
+<p>神回复
+<img src="/assets/2022/01-wechaty-assistant-bot-opensource/godreply.webp" alt="image.png" /></p>
+
+<p>每日英语
+<img src="/assets/2022/01-wechaty-assistant-bot-opensource/oneen.webp" alt="IMG_20220115_205958.jpg" /></p>
+
+<p>全网热点
+<img src="/assets/2022/01-wechaty-assistant-bot-opensource/networkhots.webp" alt="image.png" /></p>
+
+<p>城市天气
+<img src="/assets/2022/01-wechaty-assistant-bot-opensource/weather.webp" alt="IMG_20220115_210107.jpg" /></p>
+
+<p>客服
+<img src="/assets/2022/01-wechaty-assistant-bot-opensource/customerservice.webp" alt="image.png" /></p>
+
+<p>文本处理功能由本地编写算法处理</p>
+
+<p>英文字符串转大/小写
+<img src="/assets/2022/01-wechaty-assistant-bot-opensource/toupper.webp" alt="image.png" /></p>
+
+<p>rgb<code class="language-plaintext highlighter-rouge">&lt;=&gt;</code>hex
+<img src="/assets/2022/01-wechaty-assistant-bot-opensource/rgbtohex.webp" alt="image.png" /></p>
+
+<h3 id="22-群管理">2.2 群管理</h3>
+
+<p>通过私聊的快捷指令自动拉人入群
+<code class="language-plaintext highlighter-rouge">踢@用户名</code>快捷指令踢人</p>
+
+<p><img src="/assets/2022/01-wechaty-assistant-bot-opensource/kicksb.webp" alt="image.png" /></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="cm">/* 特权消息 */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">sender</span> <span class="o">===</span> <span class="nx">config</span><span class="p">.</span><span class="nx">MYSELF</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// 踢人功能  群里发送  踢@某某某  即可</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">"</span><span class="s2">踢@</span><span class="dl">"</span><span class="p">))</span> <span class="p">{</span>
+        <span class="c1">//如果是机器人好友且昵称是自己的大号昵称  才执行踢人操作</span>
+        <span class="c1">// edit at 0109：备注如果无法获取，等一段时间数据刷新即可。踢人要管理员权限</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">contact</span><span class="p">.</span><span class="nx">friend</span><span class="p">())</span> <span class="p">{</span>
+          <span class="kd">const</span> <span class="nx">delName</span> <span class="o">=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="dl">"</span><span class="s2">踢@</span><span class="dl">"</span><span class="p">,</span> <span class="dl">""</span><span class="p">).</span><span class="nx">trim</span><span class="p">();</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">踢出</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">delName</span><span class="p">);</span> <span class="c1">// debug</span>
+          <span class="kd">const</span> <span class="nx">delContact</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">room</span><span class="p">.</span><span class="nx">member</span><span class="p">({</span> <span class="na">name</span><span class="p">:</span> <span class="nx">delName</span> <span class="p">});</span>
+          <span class="k">await</span> <span class="nx">room</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">delContact</span><span class="p">);</span>
+          <span class="k">await</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="nx">delName</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">已被移除群聊。且聊且珍惜啊！</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>检测群内非法<code class="language-plaintext highlighter-rouge">url</code>并<code class="language-plaintext highlighter-rouge">@</code>提醒对方</p>
+
+<p><img src="/assets/2022/01-wechaty-assistant-bot-opensource/listenurl.webp" alt="image.png" /></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">urlReg</span> <span class="o">=</span>
+  <span class="sr">/</span><span class="se">(</span><span class="sr">http</span><span class="se">(</span><span class="sr">s</span><span class="se">)?</span><span class="sr">:</span><span class="se">\/\/)?[</span><span class="sr">a-zA-Z0-9</span><span class="se">][</span><span class="sr">-a-zA-Z0-9</span><span class="se">]{0,62}(\.[</span><span class="sr">a-zA-Z0-9</span><span class="se">][</span><span class="sr">-a-zA-Z0-9</span><span class="se">]{0,62})</span><span class="sr">+</span><span class="se">(</span><span class="sr">:</span><span class="se">[</span><span class="sr">0-9</span><span class="se">]{1,5})?[</span><span class="sr">-a-zA-Z0-9()@:%_</span><span class="se">\\\+\.</span><span class="sr">~#?&amp;</span><span class="se">//</span><span class="sr">=</span><span class="se">]</span><span class="sr">*$/g</span><span class="p">;</span>  <span class="c1">// 匹配url的正则表达式(实际情况下，url发送者多数不会添加http(s)头)</span>
+
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">urlReg</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">text</span><span class="p">()))</span> <span class="p">{</span>
+      <span class="nx">urlReg</span><span class="p">.</span><span class="nx">lastIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// 索引重置</span>
+
+      <span class="kd">const</span> <span class="nx">testUrl</span> <span class="o">=</span> <span class="nx">urlReg</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">text</span><span class="p">());</span>
+
+      <span class="kd">const</span> <span class="nx">valid</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">superagent</span><span class="p">.</span><span class="nx">checkUrl</span><span class="p">(</span><span class="nx">testUrl</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">valid</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">room</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">room</span><span class="p">();</span>
+        <span class="c1">// const master = await room.member(config.BOTNAME);</span>
+        <span class="k">await</span> <span class="nx">room</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span>
+          <span class="s2">`@</span><span class="p">${</span><span class="nx">msg</span>
+            <span class="p">.</span><span class="k">from</span><span class="p">()</span>
+            <span class="p">.</span><span class="nx">name</span><span class="p">()}</span><span class="s2"> 为了群主与众管理员的法律安全，本群禁止发送不明链接!!!`</span>
+        <span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">链接不合法</span><span class="dl">"</span><span class="p">);</span> <span class="c1">// debug</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="23-自动处理好友请求">2.3 自动处理好友请求</h3>
+
+<ul>
+  <li>自动通过好友请求</li>
+  <li>可限制通过填写指定验证消息的好友，避免陌生人添加好友</li>
+</ul>
+
+<h3 id="24-智能对话接入微信对话开放平台">2.4 智能对话（接入微信对话开放平台）</h3>
+
+<p>未被关键词捕获的消息将由<strong>训练好的AI</strong>智能回复</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">WXAI_TOKEN</span><span class="p">:</span> <span class="dl">"</span><span class="s2">your token</span><span class="dl">"</span><span class="p">,</span> <span class="c1">// 微信对话开放平台token</span>
+</code></pre></div></div>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">axios</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">axios</span><span class="dl">"</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">WXAI</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://openai.weixin.qq.com/openapi/</span><span class="dl">"</span><span class="p">;</span>  <span class="c1">// 微信对话开放平台</span>
+
+<span class="cm">/**
+ * @function 获取API签名，2小时过期
+ * @returns 签名
+ * @tips 改为轮询
+ */</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getSignature</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span><span class="nx">signature</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">WXAI</span><span class="p">}</span><span class="s2">sign/</span><span class="p">${</span><span class="nx">WXAI_TOKEN</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">userid</span><span class="p">:</span> <span class="dl">'</span><span class="s1">anything</span><span class="dl">'</span> <span class="c1">// 这里可以是任意值</span>
+  <span class="p">})).</span><span class="nx">data</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">signature</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * @function 调用AI接口，获取答案
+ * @param {签名} signature
+ * @param {用户id} userid 
+ * @param {接收到的文本} text 
+ * @returns AI给出的答案
+ */</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getAnswer</span><span class="p">(</span><span class="nx">signature</span><span class="p">,</span> <span class="nx">userid</span><span class="p">,</span> <span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span><span class="nx">answer</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">WXAI</span><span class="p">}</span><span class="s2">aibot/</span><span class="p">${</span><span class="nx">WXAI_TOKEN</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">signature</span><span class="p">:</span> <span class="nx">signature</span><span class="p">,</span>
+      <span class="na">userid</span><span class="p">:</span> <span class="nx">userid</span><span class="p">,</span>
+      <span class="na">query</span><span class="p">:</span> <span class="nx">text</span><span class="p">,</span>
+  <span class="p">})).</span><span class="nx">data</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">answer</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>微信对话开放平台详细配置可去<code class="language-plaintext highlighter-rouge">四</code>中链接出查阅</p>
+
+<h3 id="25-设置定时任务可循环可单次">2.5 设置定时任务(可循环、可单次）</h3>
+
+<p>定时发送群消息，登录时任务开始执行</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="cm">/**
+    * @func 8点半定时给指定群发送消息
+    */</span>
+   <span class="k">async</span> <span class="kd">function</span> <span class="nx">rolling</span><span class="p">()</span> <span class="p">{</span>
+     <span class="nx">schedule</span><span class="p">.</span><span class="nx">setSchedule</span><span class="p">(</span> <span class="c1">// node-schedule使用方法可见官方文档,此处语法不唯一</span>
+       <span class="p">{</span>
+         <span class="na">hour</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+         <span class="na">minute</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+       <span class="p">},</span>
+   
+       <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+         <span class="kd">const</span> <span class="nx">room</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bot</span><span class="p">.</span><span class="nx">Room</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
+           <span class="na">topic</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">WEBROOM</span><span class="p">,</span>
+         <span class="p">});</span>
+         <span class="kd">const</span> <span class="nx">today</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">().</span><span class="nx">format</span><span class="p">(</span><span class="dl">"</span><span class="s2">MM月DD日</span><span class="dl">"</span><span class="p">);</span>
+         <span class="kd">let</span> <span class="nx">poison</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">superagent</span><span class="p">.</span><span class="nx">getSoup</span><span class="p">();</span> <span class="c1">//毒鸡汤</span>
+         <span class="kd">const</span> <span class="nx">str</span> <span class="o">=</span> <span class="s2">`今天是</span><span class="p">${</span><span class="nx">today</span><span class="p">}</span><span class="s2">,你学废了吗?</span><span class="p">${</span><span class="nx">poison</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+         <span class="k">await</span> <span class="nx">room</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="nx">str</span><span class="p">);</span>
+       <span class="p">}</span>
+     <span class="p">);</span>
+   <span class="p">}</span>
+</code></pre></div></div>
+
+<p>定时给个人发送消息</p>
+
+<p><img src="/assets/2022/01-wechaty-assistant-bot-opensource/schedule.webp" alt="image.png" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">2022年1月14日4点0分0秒</code>向备注为<code class="language-plaintext highlighter-rouge">樊庆元</code>的联系人发送<code class="language-plaintext highlighter-rouge">“我刚学完，早安”</code>
+让卷王们感受恐惧吧！！！</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="k">if</span> <span class="p">((</span><span class="k">await</span> <span class="nx">contact</span><span class="p">.</span><span class="nx">alias</span><span class="p">())</span> <span class="o">===</span> <span class="nx">config</span><span class="p">.</span><span class="nx">MYSELF</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">"</span><span class="s2">定时</span><span class="dl">"</span><span class="p">))</span> <span class="p">{</span>
+         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">定时</span><span class="dl">"</span><span class="p">);</span>
+         <span class="kd">const</span> <span class="nx">remain</span> <span class="o">=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="dl">"</span><span class="s2">定时</span><span class="dl">"</span><span class="p">,</span> <span class="dl">""</span><span class="p">).</span><span class="nx">trim</span><span class="p">();</span> <span class="c1">// 分割指令文本</span>
+   
+         <span class="kd">const</span> <span class="nx">timeAndStr</span> <span class="o">=</span> <span class="nx">remain</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">"</span><span class="s2"> </span><span class="dl">"</span><span class="p">);</span> <span class="c1">// 时间和消息内容</span>
+   
+         <span class="kd">const</span> <span class="nx">timeStr</span> <span class="o">=</span> <span class="nx">timeAndStr</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="dl">"</span><span class="s2">.</span><span class="dl">"</span><span class="p">);</span> <span class="c1">// 精确时间</span>
+         <span class="kd">const</span> <span class="nx">txt</span> <span class="o">=</span> <span class="nx">timeAndStr</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="c1">// 消息文本</span>
+         <span class="kd">const</span> <span class="nx">target</span> <span class="o">=</span> <span class="nx">timeAndStr</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// 收信人备注</span>
+         <span class="kd">const</span> <span class="nx">date</span> <span class="o">=</span> <span class="nx">schedule</span><span class="p">.</span><span class="nx">scheduleMsg</span><span class="p">(</span><span class="nx">timeStr</span><span class="p">);</span>
+   
+         <span class="nx">schedule</span><span class="p">.</span><span class="nx">setSchedule</span><span class="p">(</span>
+           <span class="nx">date</span><span class="p">,</span>
+           <span class="k">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">txt</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+             <span class="kd">const</span> <span class="nx">contact</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bot</span><span class="p">.</span><span class="nx">Contact</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="na">alias</span><span class="p">:</span> <span class="nx">target</span> <span class="p">});</span> <span class="c1">// 收信人</span>
+             <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`向</span><span class="p">${</span><span class="nx">contact</span><span class="p">.</span><span class="nx">name</span><span class="p">()}</span><span class="s2">发送'</span><span class="p">${</span><span class="nx">txt</span><span class="p">}</span><span class="s2">'`</span><span class="p">);</span>
+             <span class="nx">contact</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="nx">txt</span><span class="p">);</span>
+           <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">txt</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span> <span class="c1">// 通过bind()可向内部函数挂载参数</span>
+         <span class="p">);</span>
+         <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+       <span class="p">}</span>
+   <span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="26-密码簿">2.6 密码簿</h3>
+
+<p>该功能可用于记录<strong>常用的冗长文本</strong>，例如身份证号、银行卡号、购物时的好评模板等等。</p>
+
+<p>通过指令<code class="language-plaintext highlighter-rouge">map key value</code>可记录标签为<code class="language-plaintext highlighter-rouge">key</code>，内容为<code class="language-plaintext highlighter-rouge">value</code>的密码（在<code class="language-plaintext highlighter-rouge">password</code>目录下生成文件）</p>
+
+<p><img src="/assets/2022/01-wechaty-assistant-bot-opensource/map.webp" alt="image.png" /></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">"</span><span class="s2">map</span><span class="dl">"</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// map key value</span>
+      <span class="kd">let</span> <span class="nx">command</span> <span class="o">=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="dl">"</span><span class="s2">map</span><span class="dl">"</span><span class="p">,</span> <span class="dl">""</span><span class="p">).</span><span class="nx">trim</span><span class="p">();</span> 
+      <span class="nx">command</span> <span class="o">=</span> <span class="nx">command</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">);</span>
+      <span class="kd">let</span> <span class="nx">key</span> <span class="o">=</span> <span class="nx">command</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">key</span> <span class="o">=</span> <span class="nx">cipher</span><span class="p">.</span><span class="nx">md5</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span> <span class="c1">// 文件名加密</span>
+      <span class="kd">let</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">command</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="nx">value</span> <span class="o">=</span> <span class="nx">cipher</span><span class="p">.</span><span class="nx">aes128</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span> <span class="c1">// 文件加密</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">writefile:  </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">value</span><span class="p">);</span>
+      <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">/../password</span><span class="dl">'</span><span class="p">,</span> <span class="nx">key</span><span class="p">),</span> <span class="nx">value</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">writeFileErr: </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">err</span><span class="p">);</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>通过指令get key可以获取标签为key的密码</p>
+
+<p><img src="/assets/2022/01-wechaty-assistant-bot-opensource/get.webp" alt="image.png" /></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">"</span><span class="s2">get</span><span class="dl">"</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// get key</span>
+      <span class="kd">let</span> <span class="nx">key</span> <span class="o">=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="dl">"</span><span class="s2">get</span><span class="dl">"</span><span class="p">,</span> <span class="dl">""</span><span class="p">).</span><span class="nx">trim</span><span class="p">();</span> 
+      <span class="nx">key</span> <span class="o">=</span> <span class="nx">cipher</span><span class="p">.</span><span class="nx">md5</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+      <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">/../password</span><span class="dl">'</span><span class="p">,</span> <span class="nx">key</span><span class="p">),</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">readFileErr: </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">err</span><span class="p">);</span>
+        <span class="kd">const</span> <span class="nx">detail</span> <span class="o">=</span> <span class="nx">cipher</span><span class="p">.</span><span class="nx">unaes128</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">readfile:  </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">detail</span><span class="p">);</span> <span class="c1">// 文件解密</span>
+        <span class="nx">msg</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="nx">detail</span><span class="p">);</span>
+      <span class="p">})</span>
+      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>文件加密</p>
+
+<p>文件名通过<code class="language-plaintext highlighter-rouge">md5</code>算法比对</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="kd">const</span> <span class="nx">crypto</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">crypto</span><span class="dl">"</span><span class="p">);</span>
+   
+   <span class="cm">/**
+    * @func 文件名加密
+    * @param {明文} str 
+    * @returns 加密后的字符串
+    */</span>
+   <span class="kd">const</span> <span class="nx">md5</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+     <span class="kd">const</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="dl">"</span><span class="s2">md5</span><span class="dl">"</span><span class="p">);</span>
+     <span class="nx">hash</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">str</span><span class="p">);</span>
+     <span class="k">return</span> <span class="nx">hash</span><span class="p">.</span><span class="nx">digest</span><span class="p">(</span><span class="dl">"</span><span class="s2">hex</span><span class="dl">"</span><span class="p">);</span>
+   <span class="p">};</span>
+</code></pre></div></div>
+
+<p>文件内容通过<code class="language-plaintext highlighter-rouge">aes-128-cbc</code>算法加密</p>
+
+<p><img src="/assets/2022/01-wechaty-assistant-bot-opensource/encrypt1.webp" alt="image.png" />
+<img src="/assets/2022/01-wechaty-assistant-bot-opensource/encrypt2.webp" alt="image.png" /></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="cm">/**
+    * @func aes-128-cbc加密算法封装
+    * @param {密钥} key 
+    * @param {初始化向量} iv 
+    * @param {明文} data 
+    * @returns 
+    */</span>
+   <span class="kd">function</span> <span class="nx">encrypt</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">iv</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+     <span class="kd">let</span> <span class="nx">cipher</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createCipheriv</span><span class="p">(</span><span class="dl">"</span><span class="s2">aes-128-cbc</span><span class="dl">"</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">iv</span><span class="p">);</span>
+     <span class="k">return</span> <span class="nx">cipher</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="dl">"</span><span class="s2">utf8</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">base64</span><span class="dl">"</span><span class="p">)</span> <span class="o">+</span> <span class="nx">cipher</span><span class="p">.</span><span class="nx">final</span><span class="p">(</span><span class="dl">"</span><span class="s2">base64</span><span class="dl">"</span><span class="p">);</span>
+   <span class="p">}</span>
+   
+   <span class="cm">/**
+    * @func aes-128-cbc解密算法封装
+    * @param {密钥} key 
+    * @param {初始化向量} iv 
+    * @param {密文} data 
+    * @returns 
+    */</span>
+   <span class="kd">function</span> <span class="nx">decrypt</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">iv</span><span class="p">,</span> <span class="nx">encrypted</span><span class="p">)</span> <span class="p">{</span>
+     <span class="nx">encrypted</span> <span class="o">=</span> <span class="nx">Buffer</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="nx">encrypted</span><span class="p">,</span> <span class="dl">"</span><span class="s2">base64</span><span class="dl">"</span><span class="p">);</span>
+     <span class="kd">let</span> <span class="nx">decipher</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createDecipheriv</span><span class="p">(</span><span class="dl">"</span><span class="s2">aes-128-cbc</span><span class="dl">"</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">iv</span><span class="p">);</span>
+     <span class="k">return</span> <span class="nx">decipher</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">encrypted</span><span class="p">,</span> <span class="dl">"</span><span class="s2">utf8</span><span class="dl">"</span><span class="p">)</span> <span class="o">+</span> <span class="nx">decipher</span><span class="p">.</span><span class="nx">final</span><span class="p">(</span><span class="dl">"</span><span class="s2">utf8</span><span class="dl">"</span><span class="p">);</span>
+   <span class="p">}</span>
+   
+   <span class="cm">/**
+    * @func 加密文件内容
+    * @param {明文} data 
+    * @returns 加密后的文件内容
+    */</span> 
+   <span class="kd">const</span> <span class="nx">aes128</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">key</span><span class="o">=</span><span class="dl">"</span><span class="s2">123456789abcdefg</span><span class="dl">"</span><span class="p">,</span> <span class="nx">iv</span><span class="o">=</span><span class="dl">"</span><span class="s2">123456789abcdefg</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+     <span class="k">return</span> <span class="nx">encrypt</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">iv</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+   <span class="p">};</span>
+   
+   <span class="cm">/**
+    * @func 解密文件内容
+    * @param {密钥} key 
+    * @param {初始化向量} iv 
+    * @param {密文} data 
+    * @returns 
+    */</span>
+   <span class="kd">const</span> <span class="nx">unaes128</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">key</span><span class="o">=</span><span class="dl">"</span><span class="s2">123456789abcdefg</span><span class="dl">"</span><span class="p">,</span> <span class="nx">iv</span><span class="o">=</span><span class="dl">"</span><span class="s2">123456789abcdefg</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+     <span class="k">return</span> <span class="nx">decrypt</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">iv</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+   <span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="三目录结构">三、目录结构</h2>
+
+<p><code class="language-plaintext highlighter-rouge">config</code>文件夹存放公共配置文件以及<code class="language-plaintext highlighter-rouge">superagent</code>请求相关配置</p>
+
+<p><code class="language-plaintext highlighter-rouge">imgs</code>存放相关图片</p>
+
+<p><code class="language-plaintext highlighter-rouge">listeners</code>存放机器人初始化后一系列事件处理(分模块)
+<code class="language-plaintext highlighter-rouge">on-friendship.js</code>处理好友请求
+<code class="language-plaintext highlighter-rouge">on-login.js</code>处理登录
+<code class="language-plaintext highlighter-rouge">on-message.js</code>处理用户消息、群消息
+<code class="language-plaintext highlighter-rouge">on-scan.js</code>处理登录二维码</p>
+
+<p><code class="language-plaintext highlighter-rouge">schedule</code>对定时任务<code class="language-plaintext highlighter-rouge">node-schedule</code>库进行了封装</p>
+
+<p><code class="language-plaintext highlighter-rouge">superagent</code>存放所有的数据请求、接口封装都在此</p>
+
+<p><code class="language-plaintext highlighter-rouge">utils</code>公用方法的封装</p>
+
+<p><code class="language-plaintext highlighter-rouge">app.js</code>入口文件</p>
+
+<h2 id="四如何本地化">四、如何本地化</h2>
+
+<p>需修改<code class="language-plaintext highlighter-rouge">config</code>配置，将里面的配置改为自己的。打开<code class="language-plaintext highlighter-rouge">config/index.js</code>文件， 操作如下：</p>
+
+<p>官网注册账号</p>
+
+<p>wechaty-puppet-padlocal供应商：<a href="http://pad-local.com/">http://pad-local.com/</a>
+天行数据官网：<a href="https://tianapi.com/">https://www.tianapi.com/</a>
+聚合数据官网：<a href="https://www.juhe.cn/">https://www.juhe.cn/</a>
+微信对话开放平台：<a href="https://openai.weixin.qq.com/">https://openai.weixin.qq.com/</a></p>
+
+<p>注册成功后，申请以下接口</p>
+
+<p>天行数据
+<a href="https://www.tianapi.com/apiview/62">每日英语一句话</a>
+<a href="https://www.tianapi.com/apiview/39">神回复</a>
+<a href="https://www.tianapi.com/apiview/223">全网热搜榜</a></p>
+
+<p>聚合数据
+<a href="https://www.juhe.cn/docs/api/id/73">天气预报</a></p>
+
+<p>注册后请打开<code class="language-plaintext highlighter-rouge">config/index.js</code>，将顶部<code class="language-plaintext highlighter-rouge">PUPPET_TOKEN</code>、<code class="language-plaintext highlighter-rouge">TXAPI_TOKEN</code>、<code class="language-plaintext highlighter-rouge">JUHEAPI_TOKEN</code>、<code class="language-plaintext highlighter-rouge">WXAI_TOKEN</code>改为自己的即可</p>
+
+<p>其他免费接口可随意申请，也可以自行更换API服务商。</p>
+
+<h2 id="五运行">五、运行</h2>
+
+<p>记得安装依赖</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cnpm <span class="nb">install</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cnpm start
+</code></pre></div></div>
+
+<p>终端会出现一个二维码，扫码登录即可。</p>
+
+<p>若二维码显示的很诡异，无法扫描，请更换终端（去微软商店下载<code class="language-plaintext highlighter-rouge">Windows Terminal</code>）。</p>
+
+<p>有问题可邮箱咨询 <code class="language-plaintext highlighter-rouge">01@yizhihang.club</code></p>]]></content><author><name>yzh1255245824</name></author><category term="article" /><category term="assistant" /><category term="wechat" /><category term="improve-efficiency" /><category term="against-involution" /><summary type="html"><![CDATA[项目地址]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2022/01-wechaty-assistant-bot-opensource/roll.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2022/01-wechaty-assistant-bot-opensource/roll.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">将 wechaty-puppet 升级为1.0以上版本</title><link href="https://wechaty.js.org/2022/01/11/upgrade-to-wechaty-puppet-1.0/" rel="alternate" type="text/html" title="将 wechaty-puppet 升级为1.0以上版本" /><published>2022-01-11T00:00:00+00:00</published><updated>2022-01-11T00:00:00+00:00</updated><id>https://wechaty.js.org/2022/01/11/upgrade-to-wechaty-puppet-1.0</id><content type="html" xml:base="https://wechaty.js.org/2022/01/11/upgrade-to-wechaty-puppet-1.0/"><![CDATA[<h2 id="将-wechaty-puppet-升级为10以上版本">将 wechaty-puppet 升级为1.0以上版本</h2>
+
+<h2 id="前言">前言</h2>
+
+<p>随着 Wechaty 1.0 版本的发布，Wechaty 的发展正式进入新的阶段，但要升级整套工具到1.0版本以上并不容易。这篇博客将简单介绍 wechaty-puppet 升级的主要注意事项，并提供一个简单的过渡方案。</p>
+
+<h2 id="总体思路">总体思路</h2>
+
+<p>Wechaty 1.0采取了模块化、管道化的设计，将基础功能写在骨架（skeleton）中，然后通过mixin挂在登录、消息、io 等功能。这样做的主要目的是避免回调过多，以及方便测试。wechaty-puppet也采用这一思路重新设计，不同的导出被放在不同的模块中，而不是一股脑塞在 puppet 中。同时，puppet 实现应该自己引用需要版本的其他包例如 file-box 等。这也是降低耦合度的设计。</p>
+
+<h2 id="数据类型导出">数据类型导出</h2>
+
+<p>如上一节所说，数据类型不再能直接从 wechaty-puppet 中导出，而是需要从不同的模块中导出，并且名字也有所修改。例如：</p>
+
+<p>旧：</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Puppet</span><span class="p">,</span> <span class="nx">ScanStatus</span><span class="p">,</span> <span class="nx">EventMessagePayload</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">wechaty-puppet</span><span class="dl">'</span>
+
+<span class="kd">class</span> <span class="nx">xxxPuppet</span> <span class="k">implements</span> <span class="nx">Puppet</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+
+  <span class="k">async</span> <span class="nx">onScan</span> <span class="p">(</span><span class="nx">status</span><span class="p">:</span> <span class="nx">ScanStatus</span><span class="p">,</span> <span class="nx">qrcode</span><span class="p">?:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    
+  <span class="p">}</span>
+
+  <span class="nx">foo</span> <span class="p">(</span><span class="nx">message</span><span class="p">:</span> <span class="nx">EventMessagePayload</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>应该改为：</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">payloads</span><span class="p">,</span> <span class="nx">types</span><span class="p">,</span> <span class="nx">Puppet</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">wechaty-puppet</span><span class="dl">'</span>
+
+<span class="kd">class</span> <span class="nx">xxxPuppet</span> <span class="k">implements</span> <span class="nx">Puppet</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="k">async</span> <span class="nx">onScan</span> <span class="p">(</span><span class="nx">status</span><span class="p">:</span> <span class="nx">types</span><span class="p">.</span><span class="nx">ScanStatus</span><span class="p">,</span> <span class="nx">qrcode</span><span class="p">?:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="p">}</span>
+
+  <span class="nx">foo</span> <span class="p">(</span><span class="nx">message</span><span class="p">:</span> <span class="nx">payloads</span><span class="p">.</span><span class="nx">EventMessage</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="状态管理">状态管理</h2>
+
+<p>wechaty-puppet 将不再允许 puppet 修改状态（至少是不建议的）。同时， this.state 的属性也有所改变。应利用以下api获取状态：</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="p">.</span><span class="nx">isLoggedIn</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">active</span><span class="p">()</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">inactive</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="启动停止">启动、停止</h2>
+
+<p>从代码复用的角度考虑，wechaty-puppet 将接管 <code class="language-plaintext highlighter-rouge">start</code> 和 <code class="language-plaintext highlighter-rouge">stop</code> 方法，而 puppet 应该做的是重写 <code class="language-plaintext highlighter-rouge">onStart()</code> 和 <code class="language-plaintext highlighter-rouge">onStop()</code> 以执行启动停止所需要的逻辑。</p>
+
+<h2 id="其他">其他</h2>
+
+<p>尽管在 wechaty-puppet@1.10 版本中，helpers 模块依旧提供了 file-box 的导出，但建议自己另行导入 file-box 等其他模块，这样如果需要使用 <code class="language-plaintext highlighter-rouge">FileBoxTypes</code> 类型枚举也能方便使用。
+同时如果 puppet 要配合 wechaty-io-client 和 puppet-service 来提供远程服务，需要注意新版本对 token 的生成有一些新的要求。token 需要以一个 Server Name Indication (SNI) 作为前缀，例如 SNI 为 somesni ，则token应为 somesni_xxxx-xxx 的格式。同时，要有一个签名认证的 CA ,否则无法建立 TLS 。（可以通过将 insecure 作为前缀来绕过这一检查，但正如其名，这是不安全的。）。参考 <a href="https://github.com/wechaty/puppet-service/issues/190">TLS &amp; SNI Problem: cannot connect to Puppet Server after Wechaty 1.0 migiration</a></p>
+
+<h2 id="过渡方案">过渡方案</h2>
+
+<p><a href="https://github.com/hcfw007/wechaty-puppet-1.0-migration">wechaty-puppet-1.0-migration</a></p>
+
+<p>wechaty-puppet-1.0-migration 包提供了一个过渡方案，使得你可以像以前从 wechaty-puppet 引用一样从 wechaty-puppet-1.0-migration 引用所需的模块，以第一段所说的代码为例：</p>
+
+<p>从 wechaty-puppet-1.0-migration 导入：</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Puppet</span><span class="p">,</span> <span class="nx">ScanStatus</span><span class="p">,</span> <span class="nx">EventMessagePayload</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">wechaty-puppet-1.0-migration</span><span class="dl">'</span>
+
+<span class="kd">class</span> <span class="nx">xxxPuppet</span> <span class="k">implements</span> <span class="nx">Puppet</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+
+  <span class="k">async</span> <span class="nx">onScan</span> <span class="p">(</span><span class="nx">status</span><span class="p">:</span> <span class="nx">ScanStatus</span><span class="p">,</span> <span class="nx">qrcode</span><span class="p">?:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+    
+  <span class="p">}</span>
+
+  <span class="nx">foo</span><span class="p">(</span><span class="nx">message</span><span class="p">:</span> <span class="nx">EventMessagePayload</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>注意，你仍需自己安装 wechaty-puppet 和 file-box ，这样就可以选择自己所需的版本。同时，你仍需重写 Puppet 类中修改的方法，例如 <code class="language-plaintext highlighter-rouge">start()</code> 改为 <code class="language-plaintext highlighter-rouge">onStart()</code>。这一项目的目的是是你更少的修改代码以使用 wechaty-puppet 新版本的新特性，建议不要作为长期解决方案，并尽快迁移到新版本。</p>]]></content><author><name>wang-nan</name></author><category term="article" /><category term="wechaty-puppet" /><category term="wechaty-1.0" /><summary type="html"><![CDATA[将 wechaty-puppet 升级为1.0以上版本]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2022/01-upgrade-to-wechaty-puppet-1.0/cover.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2022/01-upgrade-to-wechaty-puppet-1.0/cover.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">北京GDG|社区说｜NG+|聊天机器人与Angular</title><link href="https://wechaty.js.org/2022/01/06/angular-tensorflow-js/" rel="alternate" type="text/html" title="北京GDG|社区说｜NG+|聊天机器人与Angular" /><published>2022-01-06T00:00:00+00:00</published><updated>2022-01-06T00:00:00+00:00</updated><id>https://wechaty.js.org/2022/01/06/angular-tensorflow-js</id><content type="html" xml:base="https://wechaty.js.org/2022/01/06/angular-tensorflow-js/"><![CDATA[<blockquote>
+  <p>AI, Wechaty, Angular, and mix them altogether in JavaScript</p>
+</blockquote>
+
+<h2 id="聊天机器人与-angular">聊天机器人与 Angular</h2>
+
+<p>人工智能的发展带动了对话式交互领域研究的深入，以及随着移动互联网即时通讯工具的大众普及，Chatbot 的应用场景越来越丰富。如何基于现有的人工智能技术，构建一个聊天机器人？</p>
+
+<p>Chatbot 的整个生命周期和传统的网页和APP产品有那些区别？ML GDE Huan 将基于自己对 Chatbot 的丰富实践，分享和展望这类新型对话式交互方式基于人工智能的未来发展机会。</p>
+
+<p>The development of artificial intelligence has driven the in-depth research in the field of conversational interaction, and with the popularization of mobile Internet instant messaging tools, the application scenarios of Chatbot have become more and more abundant. How to build a chatbot based on existing artificial intelligence technology? What are the differences between the entire life cycle of Chatbot and traditional web and APP products? ML GDE Huan will share his thoughts on the new opportunities that Conversational AI can bring.</p>
+
+<ol>
+  <li>Conversational User Interface (CUI) 介绍</li>
+  <li>人工智能发展回顾</li>
+  <li>Wechaty 开源项目介绍</li>
+  <li>TensorFlow.js 介绍</li>
+  <li>Live Demo: 基于 Angular 通过 TensorFlow.js 对微信消息在浏览器中进行实时分析</li>
+  <li>20:45-21:00 互动问答</li>
+</ol>
+
+<h2 id="讲师介绍">讲师介绍</h2>
+
+<p>李卓桓，谷歌开发者专家（机器学习方向）</p>
+
+<ul>
+  <li>TensorFlow.js 布道师，Angular爱好者</li>
+  <li>PreAngel 天使投资人，专注 AI/Chatbot 领域创业团队和项目</li>
+  <li>《Chatbot 从 0 到 1》《简明的 TensorFlow 2》联合作者</li>
+  <li>GitHub 万星开源 Conversational SDK Wechaty 作者</li>
+</ul>
+
+<p>GDE (Machine Learning); Angel Investor</p>
+
+<p>GDE (Machine Learning) and AI MVP. PreAngel Partner, Plug and Play Venture Partner in China. Active Angel Investor for AI Startups, Serial Entrepreneur with Strong Technical Background.</p>
+
+<h2 id="presentation">Presentation</h2>
+
+<h3 id="slides">Slides</h3>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+">
+  <iframe src="https://docs.google.com/presentation/d/1Gd3D8bS6OifXDsdSe0x5i6XsP_uISX3W9tR8yBA0mYs/edit?usp=sharing" allowfullscreen="" webkitallowfullscreen="" frameborder="0" style="
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    ">
+</iframe>
+
+</div>
+
+<h3 id="source-code">Source Code</h3>
+
+<p>GitHub: <a href="https://github.com/huan/ng-plus-wechaty">https://github.com/huan/ng-plus-wechaty</a></p>
+
+<h2 id="tutorials">Tutorials</h2>
+
+<h3 id="wechaty-token-apply-a-token-from-wechaty-puppet-service-providers">Wechaty Token: apply a token from Wechaty Puppet Service Providers</h3>
+
+<p>You can apply a Windows / Pad protocol token from our puppet service providers:</p>
+
+<ol>
+  <li><a href="https://github.com/wechaty/puppet-supports/issues/new/choose">Apply Wechaty Puppet Service Token</a></li>
+  <li><a href="https://wechaty.js.org/docs/puppet-services/faq">Wechaty Puppet Service FAQ</a></li>
+</ol>
+
+<h4 id="create-a-wechaty-puppet-service-token-by-yourself-diy">Create a Wechaty Puppet Service Token by yourself (DIY)</h4>
+
+<p>Copy the following shell script and then paste it into the term of your server, to setup your Wechaty token:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># learn how to DIY a Wechaty Puppet Service token at http://wechaty.js.org/docs/puppet-services/diy</span>
+<span class="nb">export </span><span class="nv">WECHATY_TOKEN</span><span class="o">=</span>insecure_wechaty_puppet_service_token_diy
+
+<span class="c"># Set port for your hostie service: must be published accessible on the internet</span>
+<span class="c"># Wechaty IO Client use this port to publish the Puppet Service</span>
+<span class="nb">export </span><span class="nv">WECHATY_PUPPET_SERVER_PORT</span><span class="o">=</span>48788
+
+<span class="c"># learn more about Wechaty Puppet PadLocal at https://wechaty.js.org/docs/puppet-services/padlocal</span>
+<span class="nb">export </span><span class="nv">WECHATY_PUPPET</span><span class="o">=</span>wechaty-puppet-padlocal
+<span class="c"># get a 7 days free token at PadLocal official website: http://pad-local.com/</span>
+<span class="nb">export </span><span class="nv">WECHATY_PUPPET_PADLOCAL_TOKEN</span><span class="o">=</span>YOUR_PADLOCAL_TOKEN_AT_HERE
+
+<span class="nb">export </span><span class="nv">WECHATY_LOG</span><span class="o">=</span>verbose
+
+docker run <span class="se">\</span>
+  <span class="nt">--rm</span> <span class="se">\</span>
+  <span class="nt">-ti</span> <span class="se">\</span>
+  <span class="nt">-e</span> WECHATY_LOG <span class="se">\</span>
+  <span class="nt">-e</span> WECHATY_PUPPET <span class="se">\</span>
+  <span class="nt">-e</span> WECHATY_PUPPET_PADLOCAL_TOKEN <span class="se">\</span>
+  <span class="nt">-e</span> WECHATY_PUPPET_SERVER_PORT <span class="se">\</span>
+  <span class="nt">-e</span> WECHATY_TOKEN <span class="se">\</span>
+  <span class="nt">-p</span> <span class="s2">"</span><span class="nv">$WECHATY_PUPPET_SERVER_PORT</span><span class="s2">"</span> <span class="se">\</span>
+  wechaty/wechaty:0.78
+</code></pre></div></div>
+
+<blockquote>
+  <p>Learn more: <a href="https://wechaty.js.org/docs/puppet-services/diy/">Puppet Service: DIY</a> This guide will help you generate a Wechaty Token for connecting to the Wechaty Puppet Service.</p>
+</blockquote>
+
+<h2 id="live-coding-explanation">Live Coding Explanation</h2>
+
+<p>We have four steps in our live coding, they are saved in four separate branches for easy loading and testing.</p>
+
+<h3 id="step-1-ng-new-my-app">Step 1. <code class="language-plaintext highlighter-rouge">ng new my-app</code></h3>
+
+<p>Branch: <a href="https://github.com/huan/ng2020-wechaty/tree/ng_china_2020_step_1_ng_new_my-app">ng_china_2020_step_1_ng_new_my-app</a></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npx <span class="nt">--package</span> @angular/cli ng new my-app
+<span class="nb">cd </span>my-app
+ng serve <span class="nt">--open</span>
+</code></pre></div></div>
+
+<p>Learn more from <a href="https://angular.io/guide/setup-local">https://angular.io/guide/setup-local</a></p>
+
+<h3 id="step-2-wechaty">Step 2. Wechaty</h3>
+
+<p>Branch: <a href="https://github.com/huan/ng2020-wechaty/tree/ng_china_2020_step_2_wechaty">ng_china_2020_step_2_wechaty</a></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm i @chatie/angular brolog
+</code></pre></div></div>
+
+<h4 id="appmodulets"><code class="language-plaintext highlighter-rouge">app.module.ts</code></h4>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">WechatyModule</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@chatie/angular</span><span class="dl">'</span>
+<span class="p">@</span><span class="nd">NgModule</span><span class="p">({</span>
+  <span class="na">imports</span><span class="p">:</span> <span class="p">[</span>
+    <span class="nx">WechatyModule</span><span class="p">,</span>
+    <span class="p">...</span>
+  <span class="p">],</span>
+  <span class="p">...</span>
+</code></pre></div></div>
+
+<h4 id="appcomponenthtml"><code class="language-plaintext highlighter-rouge">app.component.html</code></h4>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;wechaty</span>
+  <span class="na">#wechaty</span>
+  <span class="na">token=</span><span class="s">"insecure_wechaty_puppet_service_token_diy"</span>
+
+  <span class="na">(heartbeat) = </span><span class="s">"onHeartbeat($event)"</span>
+  <span class="na">(scan)      = </span><span class="s">"onScan($event)"</span>
+  <span class="na">(login)     = </span><span class="s">"wechaty.startSyncMessage(); onLogin($event)"</span>
+  <span class="na">(message)   = </span><span class="s">"onMessage($event)"</span>
+<span class="nt">&gt;</span>
+<span class="nt">&lt;/wechaty&gt;</span>
+</code></pre></div></div>
+
+<h3 id="step-3-tensorflowjs-toxicity">Step 3. TensorFlow.js Toxicity</h3>
+
+<p>Branch: <a href="https://github.com/huan/ng2020-wechaty/tree/ng_china_2020_step_3_toxicity">ng_china_2020_step_3_toxicity</a></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install</span> @tensorflow/tfjs
+npm <span class="nb">install</span> @tensorflow-models/toxicity
+
+ng generate service toxicity
+</code></pre></div></div>
+
+<p><a href="https://storage.googleapis.com/tfjs-models/demos/toxicity/index.html"><img src="/assets/2022/01-angular-tensorflow-js/toxicity.webp" alt="TensorFlow.js Toxicity Model" /></a></p>
+
+<p>Learn more:</p>
+
+<ol>
+  <li><a href="https://github.com/tensorflow/tfjs-models/tree/master/toxicity">TensorFlow.js models: toxicity classifier source</a></li>
+  <li><a href="https://storage.googleapis.com/tfjs-models/demos/toxicity/index.html">TensorFlow.js toxicity classifier demo</a>: This is a demo of the TensorFlow.js toxicity model, which classifies text according to whether it exhibits offensive attributes (i.e. profanity, sexual explicitness).</li>
+  <li><a href="https://medium.com/tensorflow/text-classification-using-tensorflow-js-an-example-of-detecting-offensive-language-in-browser-e2b94e3565ce">Text classification using TensorFlow.js: An example of detecting offensive language in browser</a></li>
+</ol>
+
+<p>The traffic light code is copy/pasted from this great tutorial: <a href="https://medium.com/@robhitt/stop-in-the-name-of-the-traffic-light-c5f4d8a9d2e6">Stop in the Name of the Traffic Light</a></p>
+
+<h2 id="resources">Resources</h2>
+
+<ol>
+  <li><a href="https://www.tensorflow.org/js/tutorials">TensorFlow.js Tutorials</a></li>
+  <li><a href="https://www.tensorflow.org/js/models">TensorFlow.js Models</a></li>
+  <li><a href="https://www.tensorflow.org/js/demos">TensorFlow.js Demos</a></li>
+  <li><a href="https://github.com/tensorflow/tfjs-examples/">TensorFlow.js Examples</a></li>
+  <li><a href="https://github.com/tensorflow/tfjs/blob/master/GALLERY.md">TensorFlow.js Gallery</a></li>
+</ol>
+
+<h2 id="about-ng">About NG+</h2>
+
+<p>Knowledge, ideas, and insights for the Next Generation.</p>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+">
+  <iframe src="https://www.youtube.com/embed/SACugbTNQnc" allowfullscreen="" webkitallowfullscreen="" frameborder="0" style="
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    ">
+</iframe>
+
+</div>
+
+<p><img src="/assets/2022/01-angular-tensorflow-js/huan-ng-2020.webp" alt="NG2020 Conference Huan Wechaty Angular TensorFlow.js" /></p>
+
+<blockquote>
+  <p>Source: <a href="https://ng-plus.dev/#/conferences?year=2020">NG+ Developers Conference</a></p>
+</blockquote>
+
+<h2 id="关于社区说">关于社区说</h2>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+">
+  <iframe src="https://www.youtube.com/embed/XGBBx3_pLdg" allowfullscreen="" webkitallowfullscreen="" frameborder="0" style="
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    ">
+</iframe>
+
+</div>
+
+<blockquote>
+  <p>Bilibili: <a href="https://www.bilibili.com/video/BV1Ha411q7RF">https://www.bilibili.com/video/BV1Ha411q7RF</a></p>
+</blockquote>
+
+<p>「社区说」是由谷歌开发者社区 (Google Developer Group)与谷歌开发者专家计划 (Google Developer Expert) 联合推出的，与热爱技术的开发者们交流技术，直播代码，讨论产品，分享心得的小型线上会议，每次时长45分钟到1小时。</p>
+
+<p><img src="/assets/2022/01-angular-tensorflow-js/huan-gdg-2021-community-talk.webp" alt="GDG Community Talk Huan Wechaty Angular TensorFlow.js" /></p>
+
+<p>活动将由不同的谷歌开发者社区举办，并邀请国内相关技术方向的谷歌开发者专家以及对技术有热情、愿意分享的嘉宾，一起聊聊最近做的项目、写的代码，或者三五技术好友探讨聊天。</p>
+
+<blockquote>
+  <p>Source: <a href="https://mp.weixin.qq.com/s/cluw2QQepzacuZFA1pJvcw">社区说｜聊天机器人与 Angular</a></p>
+</blockquote>]]></content><author><name>huan</name></author><category term="talk" /><category term="angular" /><category term="tensorflow.js" /><category term="gdg" /><summary type="html"><![CDATA[AI, Wechaty, Angular, and mix them altogether in JavaScript]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2022/01-angular-tensorflow-js/ai-angular-tensorflow-js.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2022/01-angular-tensorflow-js/ai-angular-tensorflow-js.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">wechaty 基于 nodejs 原生 http 包的服务</title><link href="https://wechaty.js.org/2022/01/04/wechaty-with-node-server/" rel="alternate" type="text/html" title="wechaty 基于 nodejs 原生 http 包的服务" /><published>2022-01-04T00:00:00+00:00</published><updated>2022-01-04T00:00:00+00:00</updated><id>https://wechaty.js.org/2022/01/04/wechaty-with-node-server</id><content type="html" xml:base="https://wechaty.js.org/2022/01/04/wechaty-with-node-server/"><![CDATA[<p>很开心加入了 Wechaty 社区，也在我的日常工作中提供了很多帮助。根据日常的工作需要，我自己加入了一些自己需要的功能。</p>
+
+<p>今天和大家分享一个内容：</p>
+
+<ul>
+  <li>使用 nodejs 原生的 http 包来接收 http 请求</li>
+</ul>
+
+<h2 id="使用背景">使用背景</h2>
+
+<p>我们单位在日常工作中需要将审批流中审批的详情发在微信的工作群中，并通知到相关的人员。此类需求在钉钉或者是企业微信都很容易做到。但是历史原因，我们还都是用微信来进行处理。也就产生了这个需求。因为我们用的是 wechaty docker 实现，所以就采用了 nodejs 原生的 http 模块进行开发。</p>
+
+<h2 id="实现">实现</h2>
+
+<p>index.js</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">import</span> <span class="p">{</span>
+    <span class="nx">WechatyBuilder</span><span class="p">,</span>
+    <span class="nx">ScanStatus</span><span class="p">,</span>
+    <span class="nx">log</span><span class="p">,</span>
+  <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">wechaty</span><span class="dl">'</span>
+  
+  <span class="k">import</span> <span class="nx">qrTerm</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">qrcode-terminal</span><span class="dl">'</span>
+  <span class="k">import</span> <span class="o">*</span> <span class="k">as</span> <span class="nx">querystring</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">querystring</span><span class="dl">'</span><span class="p">;</span>
+  <span class="k">import</span> <span class="o">*</span> <span class="k">as</span> <span class="nx">http</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">;</span>
+  <span class="k">import</span> <span class="o">*</span> <span class="k">as</span> <span class="nx">enc</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./encrypt.js</span><span class="dl">'</span><span class="p">;</span>
+  <span class="cm">/**
+   *
+   * 1. Declare your Bot!
+   *
+   */</span>
+  
+  <span class="kd">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">name</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">ding-dong-bot</span><span class="dl">'</span><span class="p">,</span>
+  
+    <span class="cm">/**
+     * You can specify different puppet for different IM protocols.
+     * Learn more from https://wechaty.js.org/docs/puppet-providers/
+     */</span>
+    <span class="c1">// puppet: 'wechaty-puppet-whatsapp'</span>
+  
+    <span class="cm">/**
+     * You can use wechaty puppet provider 'wechaty-puppet-service'
+     *   which can connect to Wechaty Puppet Services
+     *   for using more powerful protocol.
+     * Learn more about services (and TOKEN)from https://wechaty.js.org/docs/puppet-services/
+     */</span>
+    <span class="c1">// puppet: 'wechaty-puppet-service'</span>
+    <span class="c1">// puppetOptions: {</span>
+    <span class="c1">//   token: 'xxx',</span>
+    <span class="c1">// }</span>
+  <span class="p">}</span>
+  
+  <span class="kd">const</span> <span class="nx">bot</span> <span class="o">=</span> <span class="nx">WechatyBuilder</span><span class="p">.</span><span class="nx">build</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span>
+  
+  
+  <span class="kd">const</span> <span class="nx">hostname</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">0.0.0.0</span><span class="dl">'</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">port</span> <span class="o">=</span> <span class="mi">8081</span><span class="p">;</span>
+  <span class="cm">/**
+   *
+   * 2. Register event handlers for Bot
+   *
+   */</span>
+  <span class="nx">bot</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">logout</span><span class="dl">'</span><span class="p">,</span> <span class="nx">onLogout</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">login</span><span class="dl">'</span><span class="p">,</span>  <span class="nx">onLogin</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan</span><span class="dl">'</span><span class="p">,</span>   <span class="nx">onScan</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">,</span>  <span class="nx">onError</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span> <span class="nx">onMessage</span><span class="p">)</span>
+  
+  <span class="nx">bot</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span>
+  <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="k">async</span> <span class="nx">e</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Bot start() fail:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span>
+    <span class="k">await</span> <span class="nx">bot</span><span class="p">.</span><span class="nx">stop</span><span class="p">()</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+  <span class="p">})</span>
+   <span class="c1">// 中间常规的方法忽略......</span>
+  <span class="c1">//下面就是启动http server</span>
+  <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">post</span> <span class="o">=</span> <span class="dl">''</span><span class="p">;</span>
+  
+    <span class="k">if</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">method</span><span class="o">===</span><span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">){</span>
+      <span class="c1">// 通过req的data事件监听函数，每当接受到请求体的数据，就累加到post变量中</span>
+      <span class="nx">request</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">data</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">chunk</span><span class="p">){</span>
+        <span class="nx">post</span> <span class="o">+=</span> <span class="nx">chunk</span><span class="p">;</span>
+      <span class="p">});</span>
+  
+      <span class="c1">// 在end事件触发后，通过querystring.parse将post解析为真正的POST请求格式，然后向客户端返回。</span>
+      <span class="nx">request</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">end</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">const</span> <span class="nx">ps</span> <span class="o">=</span> <span class="nx">querystring</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">post</span><span class="p">);</span>
+        <span class="nx">response</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="dl">"</span><span class="s2">Content-Type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">application/json</span><span class="dl">"</span><span class="p">});</span>
+        <span class="c1">//检查合规后发送消息</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">check</span><span class="p">(</span><span class="nx">ps</span><span class="p">))</span> <span class="p">{</span>
+            <span class="c1">//这里是向指定微信群中发消息</span>
+          <span class="nx">sendMsgToRoom</span><span class="p">(</span><span class="nx">ps</span><span class="p">[</span><span class="dl">'</span><span class="s1">room</span><span class="dl">'</span><span class="p">],</span> <span class="nx">toMsg</span><span class="p">(</span><span class="nx">ps</span><span class="p">)).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">"</span><span class="s2">发送成功.</span><span class="dl">"</span><span class="p">,</span> <span class="nx">ps</span><span class="p">[</span><span class="dl">'</span><span class="s1">title</span><span class="dl">'</span><span class="p">])</span>
+          <span class="p">})</span>
+          <span class="kd">const</span> <span class="nx">json</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+            <span class="na">status</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="na">info</span><span class="p">:</span> <span class="dl">"</span><span class="s2">success</span><span class="dl">"</span>
+          <span class="p">});</span>
+          <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">json</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
+          <span class="kd">const</span> <span class="nx">json</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+            <span class="na">status</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="na">info</span><span class="p">:</span> <span class="dl">"</span><span class="s2">验证不通过</span><span class="dl">"</span>
+          <span class="p">});</span>
+          <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">json</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="c1">// bot.do_something</span>
+    <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+      <span class="c1">// 发送响应数据 "Hello World"</span>
+      <span class="nx">response</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text/plain</span><span class="dl">'</span><span class="p">});</span>
+      <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World</span><span class="se">\n</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}).</span><span class="nx">listen</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span> <span class="nx">hostname</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">`Server running at http://</span><span class="p">${</span><span class="nx">hostname</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">port</span><span class="p">}</span><span class="s2">/`</span><span class="p">);</span>
+  <span class="p">});</span>
+</code></pre></div></div>
+
+<p>启动 docker 的时候，监听指定端口，我这里使用的是 8081，当然也可以通过-e，传入 docker 中供后面使用</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  docker run <span class="nt">-ti</span> <span class="nt">-d</span> <span class="nt">--name</span> wechaty_http_service <span class="nt">--rm</span> <span class="nt">-p</span> <span class="s2">"8081:8081"</span> <span class="nt">-e</span> <span class="nv">WECHATY_PUPPET_PADLOCAL_TOKEN</span><span class="o">=</span><span class="s2">"your puppet token"</span> <span class="nt">--mount</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bind</span>,source<span class="o">=</span><span class="s2">"</span><span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span><span class="s2">"</span>,target<span class="o">=</span>/bot wechaty/wechaty:latest index.js
+
+</code></pre></div></div>
+
+<p>http server 会随着 wechaty 启动，一起启动。大家可以在消息体中加入自己需要的各种信息，然后通过向该 server 发送各种请求发送消息。</p>
+
+<h2 id="常见问题">常见问题</h2>
+
+<p>1、为什么服务启动了，但是发送请求一直不成功？</p>
+<blockquote>
+  <p>请查看服务器该端口是否连通，是否被防火墙禁止访问</p>
+</blockquote>
+
+<p>2、服务器不允许在 url 后加端口访问怎么办？</p>
+<blockquote>
+  <p>可以使用 nginx,apache 等进行转发。我这边用的是 nginx,简单配置如下：</p>
+</blockquote>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+  location /wechaty/ <span class="o">{</span>
+    proxy_set_header X-Real-IP <span class="nv">$remote_addr</span><span class="p">;</span>
+    proxy_pass http://127.0.0.1:8081<span class="p">;</span>
+    proxy_http_version 1.1<span class="p">;</span>
+    proxy_set_header Upgrade <span class="nv">$http_upgrade</span><span class="p">;</span>
+    proxy_set_header Connection <span class="s1">'upgrade'</span><span class="p">;</span>
+    proxy_set_header Host <span class="nv">$host</span><span class="p">;</span>
+    proxy_cache_bypass <span class="nv">$http_upgrade</span><span class="p">;</span>
+  <span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>更多问题后续会根据反馈继续补充</p>
+
+<h2 id="联系方式">联系方式</h2>
+
+<ul>
+  <li>Email：xiaowx2000@qq.com</li>
+</ul>
+
+<blockquote>
+  <p>Author:<a href="https://github.com/xiaowx2010">@xiaowx2010</a></p>
+</blockquote>]]></content><author><name>xiaowx2010</name></author><category term="article" /><category term="restful-api" /><category term="http-server" /><summary type="html"><![CDATA[很开心加入了 Wechaty 社区，也在我的日常工作中提供了很多帮助。根据日常的工作需要，我自己加入了一些自己需要的功能。]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2022/01-wechaty-with-node-server/img.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2022/01-wechaty-with-node-server/img.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">2021-期中报告-基于5G平台开发puppet模块接入wechaty</title><link href="https://wechaty.js.org/2021/12/21/mid-term-wechaty-puppet-walnut-report/" rel="alternate" type="text/html" title="2021-期中报告-基于5G平台开发puppet模块接入wechaty" /><published>2021-12-21T00:00:00+00:00</published><updated>2021-12-21T00:00:00+00:00</updated><id>https://wechaty.js.org/2021/12/21/mid-term-wechaty-puppet-walnut-report</id><content type="html" xml:base="https://wechaty.js.org/2021/12/21/mid-term-wechaty-puppet-walnut-report/"><![CDATA[<h2 id="基于-5g-平台开发-puppet-模块接入-wechaty">基于 5G 平台开发 puppet 模块接入 wechaty</h2>
+
+<ul>
+  <li>项目名称：基于5G消息的 Wechaty Puppet 模块的设计与实现</li>
+  <li>学生：鲍耀龙</li>
+  <li>导师：苏畅</li>
+  <li>项目介绍：<a href="https://github.com/juzibot/intern/issues/1">https://github.com/juzibot/intern/issues/1</a></li>
+  <li>代码地址：<a href="https://github.com/wechaty/puppet-walnut">https://github.com/wechaty/puppet-walnut</a></li>
+</ul>
+
+<h3 id="背景介绍">背景介绍</h3>
+
+<ul>
+  <li>Wechaty 社区目前已经支持微信、Whatsapp、企业微信、飞书等常见流行即时通讯工具，并且能够通过多语言 SDK （比如 Python Wechaty） 进行调用。</li>
+  <li><a href="https://wechaty.js.org/2021/03/27/rcs-messaging-chatbot/">5G Chatbot (RCS)</a> 是近期中国电信运营商基于 5G 的消息战略落地平台，未来的 5G 手机将会内置 RCS 消息的处理能力。</li>
+  <li><a href="https://www.5g-msg.com/#/">硬核桃社区</a> 的 <a href="https://wechaty.js.org/2021/03/27/rcs-messaging-chatbot/">电信运营商商5G Chatbot</a> 平台。</li>
+</ul>
+
+<h3 id="目标计划">目标计划</h3>
+
+<ul>
+  <li>基于 5G 平台的开放 api 进行封装，实现简单的<code class="language-plaintext highlighter-rouge">ding-dong-bot</code>。</li>
+  <li>丰富 5G 的消息模式，实现支持富文本、文件、css等多样消息格式的 puppet。</li>
+</ul>
+
+<h3 id="项目进展">项目进展</h3>
+
+<ul>
+  <li>已经实现的puppet的封装，支持简单消息、位置消息等多样信息格式。</li>
+  <li>完善了联系人的模块，实现联系人的数据结构整合方便wechaty的调用。</li>
+  <li>引入了本地缓存，将消息和联系人模块都接入缓存，实现快速的加载和存储。</li>
+</ul>
+
+<h3 id="构建细节">构建细节</h3>
+
+<h4 id="1-wechaty与puppet的交互">1. <code class="language-plaintext highlighter-rouge">Wechaty</code>与<code class="language-plaintext highlighter-rouge">Puppet</code>的交互</h4>
+
+<p><img src="/assets/2021/12-mid-term-wechaty-puppet-walnut-report/wechatypuppetwalnut.webp" alt="WechatyPuppetWalnut" /></p>
+
+<ul>
+  <li>开发者通过<code class="language-plaintext highlighter-rouge">Wechaty</code>提供的 Api 来进行具体的交互操作。</li>
+  <li><code class="language-plaintext highlighter-rouge">Wechaty</code>只需要具体调用<strong>开发者指定的<code class="language-plaintext highlighter-rouge">Puppet</code></strong>即此处的<code class="language-plaintext highlighter-rouge">Walnut</code>来实现开发者需要的逻辑。</li>
+  <li>我们的<code class="language-plaintext highlighter-rouge">Walnut</code>继承于抽象的<code class="language-plaintext highlighter-rouge">Puppet</code>父类，实现其预定义的抽象方法来实现具体的能力。</li>
+  <li>具体的<code class="language-plaintext highlighter-rouge">Walnut</code>会和<code class="language-plaintext highlighter-rouge">5G</code>平台进行数据交互从而实现真正的 ChatBot。</li>
+</ul>
+
+<h4 id="2-待实现的抽象方法">2. 待实现的抽象方法</h4>
+
+<p>关于需要我们去实现的抽象方法都被定义在<a href="https://github.com/wechaty/puppet/tree/main/src/mixins">Wechaty Puppet的mixins目录下</a>。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 比如这里 MessageMixin 中定义的一些与消息模块中待实现的方法，来实现我们消息的多种格式发送。</span>
+
+    <span class="cm">/**
+    *
+    * Message
+    *
+    */</span>
+    <span class="kd">abstract</span> <span class="nx">messageContact</span>      <span class="p">(</span><span class="nx">messageId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span>                       <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">string</span><span class="o">&gt;</span>
+    <span class="kd">abstract</span> <span class="nx">messageFile</span>         <span class="p">(</span><span class="nx">messageId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span>                       <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">FileBoxInterface</span><span class="o">&gt;</span>
+    <span class="kd">abstract</span> <span class="nx">messageImage</span>        <span class="p">(</span><span class="nx">messageId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">imageType</span><span class="p">:</span> <span class="nx">ImageType</span><span class="p">)</span> <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">FileBoxInterface</span><span class="o">&gt;</span>
+    <span class="kd">abstract</span> <span class="nx">messageMiniProgram</span>  <span class="p">(</span><span class="nx">messageId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span>                       <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">MiniProgramPayload</span><span class="o">&gt;</span>
+    <span class="kd">abstract</span> <span class="nx">messageUrl</span>          <span class="p">(</span><span class="nx">messageId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span>                       <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">UrlLinkPayload</span><span class="o">&gt;</span>
+    <span class="kd">abstract</span> <span class="nx">messageLocation</span>     <span class="p">(</span><span class="nx">messageId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span>                       <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">LocationPayload</span><span class="o">&gt;</span>
+
+    <span class="kd">abstract</span> <span class="nx">messageForward</span>         <span class="p">(</span><span class="nx">conversationId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">messageId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,)</span>                     <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span> <span class="o">|</span> <span class="kr">string</span><span class="o">&gt;</span>
+    <span class="kd">abstract</span> <span class="nx">messageSendContact</span>     <span class="p">(</span><span class="nx">conversationId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">contactId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span>                      <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span> <span class="o">|</span> <span class="kr">string</span><span class="o">&gt;</span>
+    <span class="c1">// 发送文件</span>
+    <span class="kd">abstract</span> <span class="nx">messageSendFile</span>        <span class="p">(</span><span class="nx">conversationId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">file</span><span class="p">:</span> <span class="nx">FileBoxInterface</span><span class="p">)</span>                 <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span> <span class="o">|</span> <span class="kr">string</span><span class="o">&gt;</span>
+    <span class="kd">abstract</span> <span class="nx">messageSendMiniProgram</span> <span class="p">(</span><span class="nx">conversationId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">miniProgramPayload</span><span class="p">:</span> <span class="nx">MiniProgramPayload</span><span class="p">)</span> <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span> <span class="o">|</span> <span class="kr">string</span><span class="o">&gt;</span>
+    <span class="c1">// 发送文本信息</span>
+    <span class="kd">abstract</span> <span class="nx">messageSendText</span>        <span class="p">(</span><span class="nx">conversationId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">text</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">mentionIdList</span><span class="p">?:</span> <span class="kr">string</span><span class="p">[])</span> <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span> <span class="o">|</span> <span class="kr">string</span><span class="o">&gt;</span>
+    <span class="kd">abstract</span> <span class="nx">messageSendUrl</span>         <span class="p">(</span><span class="nx">conversationId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">urlLinkPayload</span><span class="p">:</span> <span class="nx">UrlLinkPayload</span><span class="p">)</span>         <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span> <span class="o">|</span> <span class="kr">string</span><span class="o">&gt;</span>
+    <span class="c1">// 发送位置信息</span>
+    <span class="kd">abstract</span> <span class="nx">messageSendLocation</span>    <span class="p">(</span><span class="nx">conversationId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">locationPayload</span><span class="p">:</span> <span class="nx">LocationPayload</span><span class="p">)</span>       <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span> <span class="o">|</span> <span class="kr">string</span><span class="o">&gt;</span>
+
+    <span class="kd">abstract</span> <span class="nx">messageRecall</span> <span class="p">(</span><span class="nx">messageId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">:</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">boolean</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<h4 id="3-消息接收">3. 消息接收</h4>
+
+<p>由于<code class="language-plaintext highlighter-rouge">Wechaty</code>和<code class="language-plaintext highlighter-rouge">Puppet</code>的约定原因，我们需要去实现消息的缓存模式，来真正的让<code class="language-plaintext highlighter-rouge">Wechaty</code>可以获得到<code class="language-plaintext highlighter-rouge">Puppet</code>所接收到的消息内容。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1. 当我们的 sever 监听到有用户发送消息，此时我们就需要去对消息的具体内容做一个缓存。</span>
+    <span class="c1">// 这里我们需要自己实现一个缓存模块，将 message 的具体内容存储进去，并且返回 id。</span>
+    <span class="c1">// 推荐李卓桓老师开发的缓存组件：flash-store。 https://github.com/huan/flash-store</span>
+
+<span class="c1">// 2. 然后我们用 Puppet 触发一个 message 事件，把我们本地缓存的 id 传出去。</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">messageId</span><span class="p">:</span> <span class="nx">messageId</span> <span class="p">})</span>
+
+<span class="c1">// 3. 这时候 Wechaty 已经拿到我们消息的 id ，这个时候会根据一个需要我们实现的查询方法来获取本地缓存。</span>
+<span class="nx">override</span> <span class="k">async</span> <span class="nx">messageRawPayload</span> <span class="p">(</span><span class="nx">messageId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">WalnutMessagePayload</span> <span class="o">|</span> <span class="kc">undefined</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="nx">log</span><span class="p">.</span><span class="nx">verbose</span><span class="p">(</span><span class="dl">'</span><span class="s1">PuppetWalnut</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">messageRawPayload(%s)</span><span class="dl">'</span><span class="p">,</span> <span class="nx">messageId</span><span class="p">)</span>
+  <span class="c1">// 这里根据 id 去缓存中查出来刚刚存入的消息</span>
+<span class="p">}</span>
+
+<span class="c1">// 4. 当查出具体的消息内容后，其实和我们 Wechaty 中预定义的消息结构可能不太一致，需要我们进行一个转换。</span>
+<span class="nx">override</span> <span class="k">async</span> <span class="nx">messageRawPayloadParser</span> <span class="p">(</span><span class="nx">rawPayload</span><span class="p">:</span> <span class="nx">WalnutMessagePayload</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">PUPPET</span><span class="p">.</span><span class="nx">payloads</span><span class="p">.</span><span class="nx">Message</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="c1">// 这里实现转换规则：WalnutMessagePayload ===&gt; PUPPET.payloads.Message</span>
+<span class="p">}</span>
+
+<span class="c1">// 不过这里要注意，在每次进行收发消息的时候 Wechaty 都会去加载一遍我们的联系人缓存。所以对应的联系人缓存的模块也需要实现：</span>
+<span class="c1">// contactRawPayload</span>
+<span class="c1">// contactRawPayloadParser</span>
+</code></pre></div></div>
+
+<h3 id="关于-5g">关于 5G</h3>
+
+<ol>
+  <li>
+    <p>联系人模块</p>
+
+    <p>5G 方面，联系人的概念可能与我们平常其他 IM 中的不同。依托于运营商的缘故，我们只需要一个手机号码就可以去直接发送消息，免去了加好友之类繁琐的操作。<strong>所以对应 Walnut 我们会对所有的发送过消息的联系人存入缓存，这样可以快速有效的积累我们的联系人。</strong></p>
+  </li>
+  <li>
+    <p>多媒体消息</p>
+
+    <p>依据 <a href="https://github.com/wechaty/puppet-walnut/blob/main/docs/api-documentation-for-5G-platform.md#18">接口文档</a> 给出的信息，5G 这边支持多样的消息格式：</p>
+
+    <ul>
+      <li>带菜单按钮的消息</li>
+      <li>文件等多媒体消息</li>
+      <li>地理位置回落信息</li>
+      <li>带CSS样式的富文本消息</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="视频展示">视频展示</h3>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+">
+  <iframe src="https://www.youtube.com/embed/i5UohqZ9uTs" allowfullscreen="" webkitallowfullscreen="" frameborder="0" style="
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    ">
+</iframe>
+
+</div>
+
+<h3 id="答辩报告">答辩报告</h3>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+">
+  <iframe src="/assets/js/viewer-js/#/assets/2021/12-mid-term-wechaty-puppet-walnut-report/mid-term-wechaty-puppet-walnut-report.pdf" allowfullscreen="" webkitallowfullscreen="" frameborder="0" style="
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    ">
+</iframe>
+
+</div>
+
+<h3 id="计划安排">计划安排</h3>
+
+<ul>
+  <li>完善 Walnut 的周边文档，包括 README、getting-started等。</li>
+  <li>落实富文本等多种信息格式的具体实现。</li>
+  <li>优化项目结构，进行项目部署和稳定性测试。</li>
+</ul>
+
+<blockquote>
+  <p>Author: <a href="https://github.com/fabian4">@fabian</a></p>
+</blockquote>]]></content><author><name>fabian</name></author><category term="project" /><category term="5g" /><category term="puppet-walnut" /><category term="chatbot" /><category term="ecosystem" /><category term="plan" /><summary type="html"><![CDATA[基于 5G 平台开发 puppet 模块接入 wechaty]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2021/12-mid-term-wechaty-puppet-walnut-report/puppet-walnut.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2021/12-mid-term-wechaty-puppet-walnut-report/puppet-walnut.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">wechaty-puppet-padlocal 实现初探</title><link href="https://wechaty.js.org/2021/12/15/inner-glance-of-padlocal/" rel="alternate" type="text/html" title="wechaty-puppet-padlocal 实现初探" /><published>2021-12-15T00:00:00+00:00</published><updated>2021-12-15T00:00:00+00:00</updated><id>https://wechaty.js.org/2021/12/15/inner-glance-of-padlocal</id><content type="html" xml:base="https://wechaty.js.org/2021/12/15/inner-glance-of-padlocal/"><![CDATA[<h2 id="引言">引言</h2>
+
+<p>笔者是 <a href="https://wechaty.js.org/">Wechaty</a> 和 <a href="https://wechaty.js.org/docs/puppet-providers/padlocal">whacty-puppet-padlocal</a> 的一名普通用户, 曾在 Wechaty 社区上发布了一篇博文<a href="https://wechaty.js.org/2021/05/02/wechaty-bible-chatbot/">《微信群机器人-读经助手》</a>。此次出于学习的目的，阅读了 Wechaty 社区上发布的 PadLocal <a href="https://wechaty.js.org/2020/10/12/puppet-padlocal-intro/">相关博文</a> 及 Github 上开源的 <a href="https://github.com/padlocal/wechaty-puppet-padlocal">wechaty-puppet-padlocal</a>、<a href="https://github.com/padlocal/padlocal-client-ts">padlocal-client-ts</a> 等仓库代码，对 whacty-puppet-padlocal 的实现做一次 简单、粗浅 的梳理，希望能够借此机会与广大开发者有所交流，帮助自己进一步学习 Wechaty 生态。</p>
+
+<h2 id="心中的疑问">心中的疑问</h2>
+
+<p>在阅读 PadLocal 作者的<a href="https://wechaty.js.org/2020/10/12/puppet-padlocal-intro/">文章</a>中，作者给出了 PadLocal 的整体架构拓扑图:</p>
+
+<p><img src="/assets/2021/12-inner-glance-of-padlocal/topological-graph.webp" alt="image" /></p>
+
+<p>作者在文中提到:</p>
+<blockquote>
+  <p>我们利用了 GRPC 的双向通信机制，让 puppet 成为代理，将所有流量通过 puppet 转发给 WeChatServer。同时由 puppet 来维持和 WeChatServer 之间的长连接。</p>
+</blockquote>
+
+<p>在读到此处时，笔者产生了几个好奇的问题：</p>
+
+<ul>
+  <li>PadLocal、PadLocalServer 在 Wechaty 整体架构中主要扮演什么角色？</li>
+  <li>有哪些类型的请求需要通过 grpc 的方式与 PadLocalServer 通信？</li>
+  <li>大体的扫码登录流程是怎么样的？</li>
+  <li>大体的消息收发流程是怎么样的？</li>
+  <li>到底有没有一个真实的 ipad 设备，在登录着微信账号？</li>
+</ul>
+
+<p>带着这几个问题，笔者阅读了<a href="https://github.com/padlocal/wechaty-puppet-padlocal">wechaty-puppet-padlocal</a>、<a href="https://github.com/padlocal/padlocal-client-ts">padlocal-client-ts</a> 等仓库代码。下文将为大家做简单、粗浅的解答。</p>
+
+<h2 id="整体架构">整体架构</h2>
+
+<p><img src="/assets/2021/12-inner-glance-of-padlocal/graph.webp" alt="整体架构" /></p>
+
+<p>我们从上往下看，在应用层我们的微信机器人直接与 Wechaty SDK 交互，在 Wechaty SDK 上调用方法，并监听一些事件。例如以下示例代码，我们在 Wechaty 实例上监听了 <code class="language-plaintext highlighter-rouge">scan</code>、<code class="language-plaintext highlighter-rouge">login</code>、<code class="language-plaintext highlighter-rouge">message</code> 等事件，并调用了 start() 方法。</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Importing the Wechaty npm package</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Wechaty</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">wechaty</span><span class="dl">'</span>
+
+<span class="c1">// Initializing the bot</span>
+<span class="kd">const</span> <span class="nx">bot</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Wechaty</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">starter-bot</span><span class="dl">'</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="c1">// Starting the bot</span>
+<span class="nx">bot</span>
+<span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">qrcode</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Scan QR Code to login: </span><span class="p">${</span><span class="nx">status</span><span class="p">}</span><span class="s2">\nhttps://wechaty.js.org/qrcode/</span><span class="p">${</span><span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">qrcode</span><span class="p">)}</span><span class="s2">`</span><span class="p">))</span>
+<span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">login</span><span class="dl">'</span><span class="p">,</span>            <span class="nx">user</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`User </span><span class="p">${</span><span class="nx">user</span><span class="p">}</span><span class="s2"> logged in`</span><span class="p">))</span>
+<span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">message</span><span class="dl">'</span><span class="p">,</span>       <span class="nx">message</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Message: </span><span class="p">${</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">))</span>
+<span class="p">.</span><span class="nx">start</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p>调用 start 方法后，我们分 方法调用 和 事件响应 两条链路来看整体的架构流水线。</p>
+
+<p><strong>第一条从上往下的 方法调用:</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">wechaty.start()</code> -&gt; <code class="language-plaintext highlighter-rouge">PuppetPadLocal.start()</code> -&gt; <code class="language-plaintext highlighter-rouge">client = PadLocalClient.create()</code> -&gt; <code class="language-plaintext highlighter-rouge">client.api.login({onQrCodeEvent，onLoginSuccess})</code>  -&gt; <code class="language-plaintext highlighter-rouge">client.request(pb.LoginRequest)</code> -&gt; <code class="language-plaintext highlighter-rouge">grpc call</code> -&gt; <code class="language-plaintext highlighter-rouge">PadLocalServer</code></p>
+
+<p>在 wechaty 的 start 流程中，通过底层依赖的层层调用，最终初始化请求，会变成一个 LoginRequest 通过 grpc 的方式发送至 PadLocalServer。</p>
+
+<p><strong>第二条从下往上的 事件响应:</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">_onServerMessage</code> -&gt; <code class="language-plaintext highlighter-rouge">onQrCodeEvent</code> -&gt; <code class="language-plaintext highlighter-rouge">PuppetPadLocal.emit('scan', {qrcode})</code> -&gt;  <code class="language-plaintext highlighter-rouge">wechaty.emit('scan')</code> -&gt; <code class="language-plaintext highlighter-rouge">QRCode</code></p>
+
+<p>grpcClient 在接收到 PadLocalServer 的响应后，通过回调 及 事件订阅的方式，向上层逐级抛出 scan 事件，我们的应用层就拿到了登录二维码。</p>
+
+<h2 id="完整的登录流程">完整的登录流程</h2>
+
+<p>以上的流程介绍中，我们提到通过 <code class="language-plaintext highlighter-rouge">wechaty.start</code> 的方法调用 及 <code class="language-plaintext highlighter-rouge">wechaty.on('scan')</code> 方法监听，可以拿到了一个 QRCode，我们使用手机扫码即可完成登录。</p>
+
+<p>我们只发了一个 <code class="language-plaintext highlighter-rouge">LoginRequest</code> 的请求，响应是拿到的是一个 二维码。一个请求一个响应，理论上一次方法调用就结束了，那上层的 <code class="language-plaintext highlighter-rouge">login</code> 的事件，又是通过什么机制触发的呢？</p>
+
+<p>答案应该就是 gRPC, 笔者没有使用过 gRPC, 但在 PadLocal 作者的文章中，他提到 gRPC 具备双向通信机制，再结合这几处的源码</p>
+
+<ul>
+  <li><a href="https://github.com/padlocal/padlocal-client-ts/blob/7ba679d78d13aeacb67969f0d817dbabf64f9c36/src/PadLocalClientApi.ts#L24-L54">PadLocalClientApi.login</a></li>
+  <li><a href="https://github.com/padlocal/padlocal-client-ts/blob/7ba679d78d13aeacb67969f0d817dbabf64f9c36/src/Request.ts#L233">Request._onServerMessage</a></li>
+  <li><a href="https://github.com/padlocal/padlocal-client-ts/blob/7ba679d78d13aeacb67969f0d817dbabf64f9c36/src/Request.ts#L214">Request._completePendingRequest</a></li>
+</ul>
+
+<p>笔者大胆猜测: 在发起 LoginRequest 的 gRPC 请求后，PadLocal 服务端会根据登录状态，持续向 Client 端响应消息，触发 Client 中的 登录相关的几个事件回调如 <code class="language-plaintext highlighter-rouge">onQrCodeEvent</code>、<code class="language-plaintext highlighter-rouge">onLoginStart</code>、
+  <code class="language-plaintext highlighter-rouge">onLoginSuccess</code>，并会控制 Client 端 与 Wechat Server 完成长连接的建立。等到这些初始化都完成后，才会通过 gRPC 响应头中的 ack 字段，来结束这次 LoginRequest 的 gRPC 请求。</p>
+
+<p>由于发起 LoginRequest 后，可能需要做长时间等待(如等待用户扫码)、并控制 Client 端与 Wechat Server建立长连接，所以这个 gRPC 的超时等待时间也非常的长，有 10 分钟之久。</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 10 min timeout</span>
+<span class="kd">const</span> <span class="nx">request</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">createRequest</span><span class="p">({</span>
+  <span class="na">requestTimeout</span><span class="p">:</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>用一张图来简要示意下，完整的 LoginRequest gRPC 调用流程:</p>
+
+<p><img src="/assets/2021/12-inner-glance-of-padlocal/login.webp" alt="image" /></p>
+
+<h2 id="消息发送">消息发送</h2>
+
+<p>在通过 Wechaty SDK 发送文字消息时，如上述的 <code class="language-plaintext highlighter-rouge">wechat.start()</code> 调用流程一样，会经过以下层级调用发送至 PadLocalServer</p>
+
+<p><code class="language-plaintext highlighter-rouge">contact.say('text message')</code> -&gt; <code class="language-plaintext highlighter-rouge">PuppetPadLocal.messageSendText(toUserName,'text message')</code> -&gt;  <code class="language-plaintext highlighter-rouge">client.api.sendTextMessage(toUserName,'text message')</code> -&gt; <code class="language-plaintext highlighter-rouge">client.request(pb.SendTextMessageRequest)</code> -&gt; <code class="language-plaintext highlighter-rouge">grpc call</code> -&gt; <code class="language-plaintext highlighter-rouge">PadLocalServer</code></p>
+
+<p>PadLocalServer 端应该会根据 Client 的请求类型SendTextMessageRequest， 在 gRPC 的响应里，指示 Client 需要通过 长连接将 textMessage 发送给 WechatyServer。</p>
+
+<p>而所有通过长连接发送给 wechatyServer 的数据，都需要再一次 通过 gRPC 将请求内容进行包装(可能是用破解的微信加密算法进行处理)。再将包装后的数据，传输给 wechatyServer。</p>
+
+<p>见以下示意图:</p>
+
+<p><img src="/assets/2021/12-inner-glance-of-padlocal/send-msg.webp" alt="消息发送示意图" /></p>
+
+<h3 id="消息推送">消息推送</h3>
+
+<p>由于 Client 通过长连接与 WechatyServer 进行连接，微信的消息，会直接到达 Client 端，但 Client 端需要通过 gRPC 请求，将消息的内容做 unpack 处理(可能是用解密算法)。然后根据消息的类型，emit 到上层中，完成消息的接收。</p>
+
+<p><img src="/assets/2021/12-inner-glance-of-padlocal/receive-msg.webp" alt="消息推送示意图" /></p>
+
+<h2 id="问题解答">问题解答</h2>
+
+<p>最后我们来看下一开始提到的几个问题:</p>
+
+<ul>
+  <li>PadLocal、PadLocalServer 在 Wechaty 整体架构中主要扮演什么角色？</li>
+  <li>有哪些类型的请求需要通过 grpc 的方式与 PadLocalServer 通信？</li>
+  <li>到底有没有一个真实的 ipad 设备，在登录着微信账号？</li>
+</ul>
+
+<blockquote>
+  <p>PadLocal、PadLocalServer 在 Wechaty 整体架构中主要扮演什么角色？</p>
+</blockquote>
+
+<p>PadLocal 在整体架构中扮演一个 微信 iPad 端代理的角色，他会与 Wechat Server 建立长连接，进行收发消息操作。但 Wechaty SDK 在 PadLocal 上的所有主动方法调用，都需要先 通过 gRPC 的方式，请求到 PadLocalServer， 在收到 PadLocalServer 的响应指示后， PadLocal 才知道如何进行后续的操作处理(通过 长/短 连接，或是 HTTP 请求 微信服务端)。并且所有的 消息的发送、接收 的加解密处理，都需要通过 PadLocalServer 进行。</p>
+
+<blockquote>
+  <p>有哪些类型的请求需要通过 gRPC 的方式与 PadLocalServer 通信？</p>
+</blockquote>
+
+<p>Wechaty SDK 上的所有主动方法调用，都会变成 client.api 的方法调用，最后变成 gRPC 请求到 PadLocalServer。再根据 gRPC 的响应指示，与 Wechat Server 进行交互。</p>
+
+<blockquote>
+  <p>到底有没有一个真实的 ipad 设备，在登录着微信账号？</p>
+</blockquote>
+
+<p>其实笔者通过粗浅的学习，也还不能确定 PadLocalServer 后面是否连接着真实的 ipad 设备，笔者只能根据 PadLocal 作者的文章 及 设备成本 等猜测，PadLocal 作者应该是完全破解了 微信 ipad 端 API，然后模拟出了一个 ipad 设备。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>本篇文章简单、粗浅地梳理了 PadLocal 的登录、消息收发流程。PadLocal 中的许多实现，笔者没有亲自实践过，只能根据看到的源代码进行推测，希望能借着这篇文章与感兴趣的开发者有所交流，并期待社区中有更多 PadLocal 相关的内部原理性文章产出，帮助我们学习 Wechaty 生态。</p>]]></content><author><name>kkdev163</name></author><category term="article" /><category term="blog" /><category term="padlocal" /><category term="typescript" /><summary type="html"><![CDATA[引言]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2021/12-inner-glance-of-padlocal/logo.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2021/12-inner-glance-of-padlocal/logo.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">使用Wechaty构建一个微信转发机器人</title><link href="https://wechaty.js.org/2021/11/30/a-wechat-message-forward-robot/" rel="alternate" type="text/html" title="使用Wechaty构建一个微信转发机器人" /><published>2021-11-30T00:00:00+00:00</published><updated>2021-11-30T00:00:00+00:00</updated><id>https://wechaty.js.org/2021/11/30/a-wechat-message-forward-robot</id><content type="html" xml:base="https://wechaty.js.org/2021/11/30/a-wechat-message-forward-robot/"><![CDATA[<h2 id="构建一个微信转发机器人">构建一个微信转发机器人</h2>
+
+<p><a href="https://github.com/hcfw007/wechat-agent">wechat-agent</a></p>
+
+<h2 id="前言">前言</h2>
+
+<p>随着智能手机的普及，越来越多的人开始试图将工作和家庭分开，例如，有两个手机号码，工作使用一个，生活使用一个。与此同时，也有人拥有多个微信。许多系统因此贴心的推出了应用多开的功能。然而，并非每个人的手机都支持这一功能，而且考虑到手机号与微信号的高度绑定，如果可能，还是分开比较安全。因此，对于这一人群，一个微信转发机器人就显得很实用了。</p>
+
+<h2 id="基本功能">基本功能</h2>
+
+<p>由于Wechaty提供的强大功能，使得写一个机器人变得十分简单。简单的思考就可以做出基础设计：当触发message事件时，将message转发给指定的contact即可。当然，由于自己发出的内容也会触发message事件，因此要对<code class="language-plaintext highlighter-rouge">message.talker()</code>进行检查。同时由于群聊的消息过于频繁，因此要对群聊的内容进行过滤。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">talker</span><span class="p">.</span><span class="nb">self</span><span class="p">())</span> <span class="p">{</span> <span class="c1">// somehow talker === bot.userSelf() does not work for this puppet</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">talker</span><span class="p">.</span><span class="nx">id</span> <span class="o">==</span> <span class="nx">g</span><span class="p">.</span><span class="nx">commander</span><span class="p">.</span><span class="nx">id</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">room</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// this can be decided with direct object comparison, but to unify all contact deciding process, I use id here too</span>
+      <span class="k">await</span> <span class="nx">processCommand</span><span class="p">(</span><span class="nx">g</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span>
+      <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="nx">g</span><span class="p">.</span><span class="nx">stat</span><span class="p">.</span><span class="nx">messageReceived</span> <span class="o">++</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">room</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">g</span><span class="p">.</span><span class="nx">roomNameList</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="k">await</span> <span class="nx">room</span><span class="p">.</span><span class="nx">topic</span><span class="p">()))</span> <span class="p">{</span>
+      <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">PRE</span><span class="p">,</span> <span class="s2">`message </span><span class="p">${</span><span class="nx">message</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="s2"> discarded as it's from a room not in allowed list`</span><span class="p">)</span>
+      <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">PRE</span><span class="p">,</span> <span class="s2">`forward message </span><span class="p">${</span> <span class="nx">message</span><span class="p">.</span><span class="nx">id</span> <span class="p">}</span><span class="s2"> to </span><span class="p">${</span> <span class="nx">target</span><span class="p">.</span><span class="nx">name</span><span class="p">()</span> <span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+    <span class="nx">g</span><span class="p">.</span><span class="nx">stat</span><span class="p">.</span><span class="nx">messageForwarded</span> <span class="o">++</span>
+    <span class="k">await</span> <span class="nx">target</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span> <span class="nx">talker</span><span class="p">.</span><span class="nx">name</span><span class="p">()</span> <span class="p">}</span><span class="s2"> </span><span class="p">${</span> <span class="nx">room</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">in room </span><span class="dl">'</span> <span class="o">+</span> <span class="k">await</span> <span class="nx">room</span><span class="p">.</span><span class="nx">topic</span><span class="p">()</span> <span class="p">:</span> <span class="dl">''</span> <span class="p">}</span><span class="s2"> said:`</span><span class="p">)</span>
+    <span class="c1">// await message.forward(target)</span>
+    <span class="k">await</span> <span class="nx">target</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">text</span><span class="p">())</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>由于我使用的puppet（donut）并未支持forward方法，因此目前使用了不优雅也有问题的say方法。以后会对这一点进行改进，根据不同的message类型来进行转发。</p>
+
+<h2 id="发送消息">发送消息</h2>
+
+<p>除了基本的转发功能之外，我还希望他进行另一个方向的转发，不仅将托管微信的内容转发给我，还可以主动对托管微信的好友、群进行发送。这也不难实现，在发现<code class="language-plaintext highlighter-rouge">message.talker()</code>为指定的contact时，就根据内容发送内容即可。</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">targetContactStr</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">targetRoomStr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">PRE</span><span class="p">,</span> <span class="s2">`no target contact or room priveded`</span><span class="p">)</span>
+    <span class="k">await</span> <span class="nx">g</span><span class="p">.</span><span class="nx">commander</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="dl">'</span><span class="s1">no target contact or room priveded</span><span class="dl">'</span><span class="p">)</span>
+    <span class="k">return</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">content</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">PRE</span><span class="p">,</span> <span class="s2">`no content priveded`</span><span class="p">)</span>
+    <span class="k">await</span> <span class="nx">g</span><span class="p">.</span><span class="nx">commander</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="dl">'</span><span class="s1">no content priveded</span><span class="dl">'</span><span class="p">)</span>
+    <span class="k">return</span>
+  <span class="p">}</span>
+
+  <span class="kd">let</span> <span class="nx">target</span><span class="p">:</span> <span class="nx">Contact</span> <span class="o">|</span> <span class="nx">Room</span> <span class="o">=</span> <span class="kc">undefined</span>
+  <span class="kd">let</span> <span class="nx">infoStr</span> <span class="o">=</span> <span class="s2">`saying </span><span class="p">${</span> <span class="nx">content</span> <span class="p">}</span><span class="s2"> `</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">targetContactStr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">target</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bot</span><span class="p">.</span><span class="nx">Contact</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="na">name</span><span class="p">:</span> <span class="nx">targetContactStr</span> <span class="p">})</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">PRE</span><span class="p">,</span> <span class="s2">`cannot find contact matching name </span><span class="p">${</span> <span class="nx">targetContactStr</span> <span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="k">await</span> <span class="nx">g</span><span class="p">.</span><span class="nx">commander</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="s2">`cannot find contact matching name </span><span class="p">${</span> <span class="nx">targetContactStr</span> <span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="nx">infoStr</span> <span class="o">+=</span> <span class="s2">`to contact </span><span class="p">${</span> <span class="nx">target</span><span class="p">.</span><span class="nx">name</span><span class="p">()</span> <span class="p">}</span><span class="s2">`</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">target</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">bot</span><span class="p">.</span><span class="nx">Room</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="na">topic</span><span class="p">:</span> <span class="nx">targetRoomStr</span> <span class="p">})</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">PRE</span><span class="p">,</span> <span class="s2">`cannot find room matching topic </span><span class="p">${</span> <span class="nx">targetContactStr</span> <span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="k">await</span> <span class="nx">g</span><span class="p">.</span><span class="nx">commander</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="s2">`cannot find contact matching name </span><span class="p">${</span> <span class="nx">targetContactStr</span> <span class="p">}</span><span class="s2">`</span><span class="p">)</span>
+      <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="nx">infoStr</span> <span class="o">+=</span> <span class="s2">`to contact </span><span class="p">${</span> <span class="k">await</span> <span class="nx">target</span><span class="p">.</span><span class="nx">topic</span><span class="p">()</span> <span class="p">}</span><span class="s2">`</span>
+  <span class="p">}</span>
+  <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nx">PRE</span><span class="p">,</span> <span class="nx">infoStr</span><span class="p">)</span>
+  <span class="nx">g</span><span class="p">.</span><span class="nx">stat</span><span class="p">.</span><span class="nx">messageSend</span> <span class="o">++</span>
+  <span class="k">await</span> <span class="nx">target</span><span class="p">.</span><span class="nx">say</span><span class="p">(</span><span class="nx">content</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="其他指令">其他指令</h2>
+
+<p>在加入主动加入消息的功能之后，为了使用方便，我又为其添加了一些其他辅助功能。例如：群消息白名单、数据统计、使用帮助、联系人列表、修改群白名单等。这些功能都可以通过指定微信对托管微信发送特定的命令进行触发。</p>
+
+<h2 id="使用方法">使用方法</h2>
+
+<p>简单使用可以直接进行<code class="language-plaintext highlighter-rouge">npm install</code>和<code class="language-plaintext highlighter-rouge">npm start</code>。在clone项目后需要进行以下个人配置：</p>
+
+<ol>
+  <li>新建.env文件并配置DONUT_TOKEN为你所使用的service token</li>
+  <li>修改config/basic.config.ts，将targetContactName改为你希望转发的目标微信名，将commanderContactName改为你希望的指令微信名，将allowedRooms改为微信群白名单数组。</li>
+</ol>
+
+<h2 id="实例截图">实例截图</h2>
+
+<p><img src="/assets/2021/11-a-wechat-message-forward-robot/example1.webp" alt="示例1" />
+<img src="/assets/2021/11-a-wechat-message-forward-robot/example2.webp" alt="示例2" /></p>
+
+<h2 id="未来期望">未来期望</h2>
+
+<p>就我个人来说，为了我目个人的使用方便，计划中增加的功能包括：</p>
+
+<ol>
+  <li>支持更多种类消息类型的转发，尤其是图片、链接。</li>
+  <li>支持设置语境。例如设置context为某微信名，则接下来所有的发送不视为指令，而是直接转发给该微信，直到输入某特定安全词进行退出。</li>
+  <li>对公众号的各种特殊消息进行更好的适配</li>
+  <li>将config中的一些基础设置转移到环境变量，使得docker使用更为方便，不需要进去改文件</li>
+</ol>
+
+<h2 id="结语">结语</h2>
+
+<p>感谢观看。如果觉得有用，请star这个小项目。如果有什么需求或者bug，请给我发issue。请各位大佬不吝赐教。</p>]]></content><author><name>wang-nan</name></author><category term="article" /><category term="study" /><category term="wechat" /><category term="message-forward" /><category term="puppet-donut" /><summary type="html"><![CDATA[构建一个微信转发机器人]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2021/11-a-wechat-message-forward-robot/cover.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2021/11-a-wechat-message-forward-robot/cover.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">成功结项！大学生的一小步，开发者的一大步</title><link href="https://wechaty.js.org/2021/11/30/report-for-summer-2021/" rel="alternate" type="text/html" title="成功结项！大学生的一小步，开发者的一大步" /><published>2021-11-30T00:00:00+00:00</published><updated>2021-11-30T00:00:00+00:00</updated><id>https://wechaty.js.org/2021/11/30/report-for-summer-2021</id><content type="html" xml:base="https://wechaty.js.org/2021/11/30/report-for-summer-2021/"><![CDATA[<p>当你还在疑惑如何进行5G消息开发
+打算申请 Chatbot 账号，租用一台服务器，买一款测试手机时
+长沙理工大学和哈尔滨工程大学的两位学生
+通过参与“开源软件供应链点亮计划 - 暑期2021”（以下简称“开源之夏”）
+已经完成了5G消息的入门开发
+那么距离更多的开发者投入到5G消息，还会远吗？</p>
+
+<h2 id="每位开发者都需要支持">每位开发者都需要支持</h2>
+
+<p>在开发之前，你需要准备以下工具：</p>
+
+<p>5G消息发布以来，主要还是 CSP 厂商，入围了运营商的内测资质，进行 5G消息平台的开发。而很多个人开发者，对于这项新技术，都还无法进行学习和开发。</p>
+
+<p>硬核桃社区，作为国内第一家 5G消息开发者社区，也收到了大量的个人开发者需求。</p>
+
+<p>为了能让个人开发者能够早日接入，硬核桃联合 Wechaty 社区，在“开源之夏”活动中，联合推出 “开发支持电信运营商 5G Chatbot RCS的 Wechaty 接入 Puppet 模块”项目。</p>
+
+<p>以硬核桃社区提供的基础开发环境， Wechaty社区提供开源SDK的合作模式，为参与项目的学生们准备了完整的技术辅导和开发工具。</p>
+
+<p>经过导师们的认真辅导和学生们的努力开发，最终，学生们成功拿到了结项证书！</p>
+
+<p><img src="/assets/2021/11-report-for-summer-2021/1.webp" alt="结项证书" /></p>
+
+<p>此开源项目，可以在开源之夏活动官网进行查看：
+<a href="https://summer.iscas.ac.cn/#/org/prodetail/210220088">项目地址</a></p>
+
+<p><img src="/assets/2021/11-report-for-summer-2021/2.webp" alt="项目ID" /></p>
+
+<p>我们的项目群也是非常壮大哦~
+<img src="/assets/2021/11-report-for-summer-2021/3.webp" alt="项目群" /></p>
+
+<h2 id="不是结项而是开始">不是结项，而是开始</h2>
+
+<p>硬核桃社区感谢每一位投入到5G消息项目中的开发者，你们今天贡献的每一行代码，都是对未来铺垫的最好的台阶。它们将会嵌入到未来开发工具中，会持续的发光发热，帮助更多的开发者们进步成长！</p>
+
+<p>支持5G消息开发者一直以来都是硬核桃社区的产业责任和工作方向，我们希望中国能够早日落地 5G消息技术，让用户使用消息服务时，信息更加安全，功能更加丰富，体验更加便捷！</p>
+
+<h3 id="未来硬核桃社区会持续推动开源项目只为更多的开发者能够加入到5g消息">未来，硬核桃社区会持续推动开源项目，只为更多的开发者能够加入到“5G消息”！</h3>
+
+<ul>
+  <li>项目仓库: <a href="https://github.com/wechaty/wechaty-puppet-walnut">https://github.com/wechaty/wechaty-puppet-walnut</a></li>
+  <li>npm包：<a href="https://www.npmjs.com/package/wechaty-puppet-walnut">https://www.npmjs.com/package/wechaty-puppet-walnut</a></li>
+</ul>
+
+<blockquote>
+  <p>作者: <a href="https://www.5g-msg.com">iron-conard</a></p>
+</blockquote>]]></content><author><name>ironconrad</name></author><category term="article" /><category term="blog" /><category term="study" /><category term="wechaty-puppet-walnut" /><category term="5g-rcs" /><category term="ospp" /><category term="ospp-2021" /><category term="summer-of-wechaty" /><category term="summer-2021" /><summary type="html"><![CDATA[当你还在疑惑如何进行5G消息开发 打算申请 Chatbot 账号，租用一台服务器，买一款测试手机时 长沙理工大学和哈尔滨工程大学的两位学生 通过参与“开源软件供应链点亮计划 - 暑期2021”（以下简称“开源之夏”） 已经完成了5G消息的入门开发 那么距离更多的开发者投入到5G消息，还会远吗？]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2021/11-report-for-summer-2021/2.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2021/11-report-for-summer-2021/2.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Design and implementation of wechaty puppet module based on Tiktok</title><link href="https://wechaty.js.org/2021/11/29/try-to-build-a-wechaty-tiktok-puppet/" rel="alternate" type="text/html" title="Design and implementation of wechaty puppet module based on Tiktok" /><published>2021-11-29T00:00:00+00:00</published><updated>2021-11-29T00:00:00+00:00</updated><id>https://wechaty.js.org/2021/11/29/try-to-build-a-wechaty-tiktok-puppet</id><content type="html" xml:base="https://wechaty.js.org/2021/11/29/try-to-build-a-wechaty-tiktok-puppet/"><![CDATA[<h2 id="context">Context</h2>
+
+<p>author: Sihe Yu
+mentor：nan Wang
+For more detailed work progress and process, please refer to the following address：
+<a href="https://github.com/juzibot/intern/issues/3">基于TIKTOK的 Wechaty puppet 模块设计与实现</a></p>
+
+<p>We hope that our product can have more ability to access IM, Therefore, the first thing to bear the brunt is to enable wechaty to stably access more IM.</p>
+
+<p>Tiktok is a popular short video software all over the world, but in addition to short video, it also has strong social attributes and provides social functions including single chat and group chat.
+In order to enable wechaty users to send and receive messages using tiktok, it is necessary to develop the corresponding puppet access module.</p>
+
+<h2 id="goal">Goal</h2>
+
+<p>During the internship, we hope to achieve the following objectives:
+The messaging function needs to implement the most basic dingdong BOT, that is, the robot will automatically reply to Dong after receiving Ding
+Need to support contact list and group list
+The code needs to be hosted on GitHub</p>
+
+<h2 id="bot-basic-information">Bot Basic information</h2>
+
+<p>intelligent tiktok robot based on the platform of shaking table, providing an intelligent robot customer service system with sales, marketing and after-sale services. It helps the enterprise to get customers quickly, enhance user stickiness and improve transformation through intelligent dialogue, customer service system and data analysis. It covers education, retail, insurance and other industries.</p>
+
+<ul>
+  <li>
+    <p>Application Name: chatbot</p>
+  </li>
+  <li>
+    <p>Application type: Website application</p>
+  </li>
+  <li>
+    <p>Application category: Social communication</p>
+  </li>
+</ul>
+
+<h2 id="project-steps">Project steps</h2>
+
+<ol>
+  <li>implement dingdong based on tiktok development platform.</li>
+  <li>Encapsulate the logic flow into a puppet</li>
+  <li>Add our newly encapsulated puppet to wechaty</li>
+</ol>
+
+<h2 id="current-progress">Current progress</h2>
+
+<ol>
+  <li>Achieve DingDong bot with TikTok Api</li>
+</ol>
+
+<h2 id="proposal-video-presentation">Proposal Video Presentation</h2>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+">
+  <iframe src="https://www.youtube.com/embed/N-Yswi7BnG4" allowfullscreen="" webkitallowfullscreen="" frameborder="0" style="
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    ">
+</iframe>
+
+</div>
+
+<h2 id="proposal-slides">Proposal Slides</h2>
+
+<div style="
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+">
+  <iframe src="/assets/js/viewer-js/#/assets/2021/11-try-to-build-a-wechaty-tiktok-puppet/mid-term-ppt.pdf" allowfullscreen="" webkitallowfullscreen="" frameborder="0" style="
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+    ">
+</iframe>
+
+</div>
+
+<h2 id="plans">Plans</h2>
+
+<h2 id="-recent-plan">* Recent plan</h2>
+
+<ol>
+  <li>Read Puppet-Mock code and try to integrate DingDong into it.</li>
+  <li>(optional) base on that, implements room (group) control and message. (There is no room api in TikTok doc. I tried to consult the custom service but no result so far)</li>
+</ol>
+
+<h2 id="-long-term-plan">* Long term plan</h2>
+
+<ol>
+  <li>Encapsulate the logic flow into a puppet</li>
+  <li>Add our newly encapsulated puppet to wechaty</li>
+</ol>]]></content><author><name>yusihe88</name></author><category term="project" /><category term="puppet-tiktok" /><category term="tiktok" /><category term="automotive" /><summary type="html"><![CDATA[Context]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://wechaty.js.org/assets/2021/11-try-to-build-a-wechaty-tiktok-puppet/wechaty-tiktok-puppet.webp" /><media:content medium="image" url="https://wechaty.js.org/assets/2021/11-try-to-build-a-wechaty-tiktok-puppet/wechaty-tiktok-puppet.webp" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
